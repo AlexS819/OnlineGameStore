@@ -1,0 +1,182 @@
+[
+  {
+    "title": "Firewatch",
+    "description": "Vero enim recusandae sed vel vitae sed aperiam quia molestiae non fuga dolorem accusamus.",
+    "price": 7.05,
+    "genre": "ACTION",
+    "publisherId": "599ad1f5-3fad-4c01-929e-9107ac5db47e",
+    "id": "73215bae-4a88-4a72-9276-f3ef097df1e4",
+    "errors": {}
+  },
+  {
+    "title": "Call of Duty: World at War",
+    "description": "Quod ad reiciendis beatae sint non nulla earum ut ipsum praesentium eligendi doloremque quos.",
+    "price": 6.14,
+    "genre": "SIMULATION",
+    "publisherId": "0877456b-837c-49e4-8360-a2f7805537ca",
+    "id": "6116e8cf-cdbf-442b-8e4e-2f2df0029e98",
+    "errors": {}
+  },
+  {
+    "title": "Team Fortress Classic",
+    "description": "Dolor totam ad repellat necessitatibus ad autem earum quo voluptatem dolorum officiis quos.",
+    "price": 32.96,
+    "genre": "ADVENTURE",
+    "publisherId": "599ad1f5-3fad-4c01-929e-9107ac5db47e",
+    "id": "77033a1e-1683-4c1a-82ef-2f426faa2709",
+    "errors": {}
+  },
+  {
+    "title": "Pokémon Ruby",
+    "description": "Natus a expedita rerum suscipit veritatis accusantium hic ipsam cumque expedita sed recusandae.",
+    "price": 36.23,
+    "genre": "RPG",
+    "publisherId": "a7b8050b-5c22-49a8-be60-8b7609275d43",
+    "id": "6ff10637-a7ff-490e-9425-5624dd60547b",
+    "errors": {}
+  },
+  {
+    "title": "Pokémon Sapphire",
+    "description": "Nobis quasi beatae veritatis occaecati similique corrupti incidunt voluptatum iure earum ipsam.",
+    "price": 10.73,
+    "genre": "ADVENTURE",
+    "publisherId": "aefd28f7-d2a5-47e4-942a-92f60afd3d12",
+    "id": "37404717-b94e-4509-8991-88fb74bad936",
+    "errors": {}
+  },
+  {
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "description": "Asperiores repudiandae eum velit dolore nostrum veritatis velit officiis asperiores officia mollitia quisquam incidunt optio.",
+    "price": 24.73,
+    "genre": "PUZZLE",
+    "publisherId": "962873a3-6e89-45d2-b9f0-84aeb1e477e4",
+    "id": "d1a6c4ba-c06b-4541-b585-2f73eeb63c01",
+    "errors": {}
+  },
+  {
+    "title": "Pokémon Blue",
+    "description": "Temporibus dignissimos accusamus veniam facilis quibusdam ex quis iusto saepe vero nostrum ex labore unde.",
+    "price": 53.57,
+    "genre": "RPG",
+    "publisherId": "962873a3-6e89-45d2-b9f0-84aeb1e477e4",
+    "id": "ff3eb0db-1650-42ff-a501-35817da2ab14",
+    "errors": {}
+  },
+  {
+    "title": "Pokémon Yellow",
+    "description": "Temporibus consequatur natus dolor et voluptates nemo sint in accusamus sapiente optio magnam expedita.",
+    "price": 54.96,
+    "genre": "RPG",
+    "publisherId": "599ad1f5-3fad-4c01-929e-9107ac5db47e",
+    "id": "d7085d13-f8d0-4687-b7a3-490122cd831b",
+    "errors": {}
+  },
+  {
+    "title": "Metroid Prime",
+    "description": "Reprehenderit voluptatum neque voluptates facere architecto eligendi id ipsum occaecati.",
+    "price": 41.2,
+    "genre": "SPORTS",
+    "publisherId": "962873a3-6e89-45d2-b9f0-84aeb1e477e4",
+    "id": "fafa6f27-a649-42b0-b289-937a7ef221bd",
+    "errors": {}
+  },
+  {
+    "title": "Half-Life 2: Episode One",
+    "description": "Dolor quae similique perferendis atque error eum sapiente veniam vitae ratione illo quae.",
+    "price": 6.52,
+    "genre": "ACTION",
+    "publisherId": "aefd28f7-d2a5-47e4-942a-92f60afd3d12",
+    "id": "ff008b50-ce7d-4639-9acd-27f1de282ce9",
+    "errors": {}
+  },
+  {
+    "title": "Firewatch",
+    "description": "Quos a minima tenetur illum commodi minima et minus maxime.",
+    "price": 18.88,
+    "genre": "IDLE",
+    "publisherId": "aefd28f7-d2a5-47e4-942a-92f60afd3d12",
+    "id": "198a1c28-8395-40f2-b47b-bebe47ff9743",
+    "errors": {}
+  },
+  {
+    "title": "Hitman: Absolution",
+    "description": "Assumenda reprehenderit iusto debitis officiis officia quos officiis quaerat aut placeat blanditiis.",
+    "price": 51.17,
+    "genre": "PUZZLE",
+    "publisherId": "aefd28f7-d2a5-47e4-942a-92f60afd3d12",
+    "id": "b11a43b7-bc26-4a88-857c-fe67cae68cbd",
+    "errors": {}
+  },
+  {
+    "title": "Super Smash Bros. Brawl",
+    "description": "Repudiandae velit autem velit vitae fugiat aperiam deserunt at aliquid natus recusandae delectus.",
+    "price": 50.18,
+    "genre": "ADVENTURE",
+    "publisherId": "a7b8050b-5c22-49a8-be60-8b7609275d43",
+    "id": "bd654d48-347b-416b-a2ed-dc87f51fef69",
+    "errors": {}
+  },
+  {
+    "title": "Ricochet",
+    "description": "Nemo ipsa non consectetur ea suscipit laudantium error explicabo mollitia ut in.",
+    "price": 22.14,
+    "genre": "RPG",
+    "publisherId": "599ad1f5-3fad-4c01-929e-9107ac5db47e",
+    "id": "297e2e4b-5d4b-4374-968f-2c76753f04e3",
+    "errors": {}
+  },
+  {
+    "title": "Super Mario Galaxy 2",
+    "description": "Officia exercitationem quasi quia fuga blanditiis quas ducimus laborum nulla repudiandae amet.",
+    "price": 22.07,
+    "genre": "SPORTS",
+    "publisherId": "aefd28f7-d2a5-47e4-942a-92f60afd3d12",
+    "id": "8327d3e0-9dfb-414a-9cb9-be6b2513ee85",
+    "errors": {}
+  },
+  {
+    "title": "Batman: Arkham City",
+    "description": "Placeat ut ex fugiat id deserunt maiores laboriosam dolore atque cupiditate eligendi cum molestias.",
+    "price": 45.08,
+    "genre": "SIMULATION",
+    "publisherId": "a7b8050b-5c22-49a8-be60-8b7609275d43",
+    "id": "c41fbfd9-c4f7-41f6-83a3-575d393decc3",
+    "errors": {}
+  },
+  {
+    "title": "Ice Climbers",
+    "description": "Iure voluptatem pariatur velit ab commodi adipisci dolores officiis similique temporibus.",
+    "price": 6.04,
+    "genre": "ACTION",
+    "publisherId": "962873a3-6e89-45d2-b9f0-84aeb1e477e4",
+    "id": "34d576d5-d035-4ed4-9e25-747c2fa82206",
+    "errors": {}
+  },
+  {
+    "title": "Call of Duty: Black Ops II",
+    "description": "Itaque adipisci tenetur optio dolore ut quae dolor vel cumque.",
+    "price": 13.68,
+    "genre": "SPORTS",
+    "publisherId": "a7b8050b-5c22-49a8-be60-8b7609275d43",
+    "id": "24c8c38f-19a7-4261-b5c8-fc2598fad016",
+    "errors": {}
+  },
+  {
+    "title": "PlayerUnknown\u0027s Battlegrounds",
+    "description": "Velit ipsam quis facere adipisci impedit expedita quidem voluptates explicabo quae cupiditate repellendus.",
+    "price": 56.3,
+    "genre": "STRATEGY",
+    "publisherId": "962873a3-6e89-45d2-b9f0-84aeb1e477e4",
+    "id": "70d5be8a-8636-4993-bd5a-0d8b2680fed2",
+    "errors": {}
+  },
+  {
+    "title": "Transistor",
+    "description": "Quo odit nisi quam tempore totam consequuntur eaque quo nulla fuga.",
+    "price": 55.73,
+    "genre": "ADVENTURE",
+    "publisherId": "a7b8050b-5c22-49a8-be60-8b7609275d43",
+    "id": "856c9841-779f-4e0d-b139-c99c384b197b",
+    "errors": {}
+  }
+]

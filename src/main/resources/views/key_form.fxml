@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sochka.onlinegamestore.controller.KeyFormController"
+      stylesheets="@../styles/style.css"
+      spacing="15.0"
+      style="-fx-background-color: #FFFFFF; -fx-padding: 25px;">
+
+    <VBox spacing="5">
+        <Label text="Activation Key Form" styleClass="page-title" style="-fx-font-size: 20px;"/>
+        <Label text="Bind digital activation codes directly to specific games." styleClass="sub-header-text"/>
+    </VBox>
+
+    <Separator opacity="0.5"/>
+
+    <VBox spacing="12.0">
+        <VBox spacing="5">
+            <Label text="ACTIVATION CODE" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="keyField" promptText="XXXXX-XXXXX-XXXXX"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="TARGET GAME" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="gameCombo" promptText="Select registered game..." maxWidth="Infinity"/>
+        </VBox>
+    </VBox>
+
+    <Label fx:id="errorLabel" text="" styleClass="message-label" style="-fx-text-fill: #E74C3C;" wrapText="true"/>
+
+    <HBox spacing="10.0" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelBtn" text="Dismiss" style="-fx-background-color: #E4E6EB; -fx-text-fill: #4B4F56; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-padding: 8px 15px;"/>
+        <Button fx:id="saveBtn" text="Save Key" styleClass="primary-button" style="-fx-padding: 8px 20px;"/>
+    </HBox>
+
+</VBox>

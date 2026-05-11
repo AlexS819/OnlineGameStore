@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sochka.onlinegamestore.controller.GameFormController"
+      stylesheets="@../styles/style.css"
+      spacing="15.0"
+      style="-fx-background-color: #FFFFFF; -fx-padding: 25px;">
+
+    <VBox spacing="5">
+        <Label text="New Catalog Item" styleClass="page-title" style="-fx-font-size: 20px;"/>
+        <Label text="Enter precise specifications for immediate inventory logging." styleClass="sub-header-text"/>
+    </VBox>
+
+    <Separator opacity="0.5"/>
+
+    <!-- Logical Entry Block -->
+    <VBox spacing="12.0">
+        <VBox spacing="5">
+            <Label text="TITLE / NAME" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="titleField" promptText="Enter game title..."/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="UNIT PRICE ($)" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="priceField" promptText="0.00"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="OFFICIAL PUBLISHER" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="publisherCombo" promptText="Select registered publisher..." maxWidth="Infinity"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="ASSOCIATED GENRES" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="genreListView" prefHeight="100.0" />
+            <Label text="Hold Ctrl (or Cmd) to select multiple." style="-fx-font-size: 10px; -fx-text-fill: gray;"/>
+        </VBox>
+    </VBox>
+
+    <!-- Warning Indicator -->
+    <Label fx:id="errorLabel" text="" styleClass="message-label" style="-fx-text-fill: #E74C3C;" wrapText="true"/>
+
+    <HBox spacing="10.0" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelBtn" text="Dismiss" style="-fx-background-color: #E4E6EB; -fx-text-fill: #4B4F56; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-padding: 8px 15px;"/>
+        <Button fx:id="saveBtn" text="Create Product" styleClass="primary-button" style="-fx-padding: 8px 20px;"/>
+    </HBox>
+
+</VBox>

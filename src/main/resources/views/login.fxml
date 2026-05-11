@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.sochka.onlinegamestore.controller.LoginController"
+           stylesheets="@../styles/style.css"
+           prefWidth="800.0" prefHeight="600.0">
+
+    <VBox alignment="CENTER" maxWidth="400.0" spacing="25" styleClass="login-panel">
+        
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Login" styleClass="header-text"/>
+            <Label text="Access your store account" styleClass="sub-header-text"/>
+        </VBox>
+
+        <!-- Form Group -->
+        <VBox spacing="15">
+            <VBox spacing="5">
+                <Label text="Email Address" styleClass="label-input"/>
+                <TextField fx:id="emailField" promptText="e.g. student@domain.com"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Password" styleClass="label-input"/>
+                <PasswordField fx:id="passwordField" promptText="Enter password"/>
+            </VBox>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="10">
+            <Button fx:id="loginBtn" text="Log In" maxWidth="Infinity" styleClass="primary-button"/>
+            <Button fx:id="goToRegisterBtn" text="Create New Account" style="-fx-background-color: transparent; -fx-text-fill: #1877F2; -fx-cursor: hand;"/>
+            <Label fx:id="messageLabel" text="" styleClass="message-label"/>
+        </VBox>
+
+    </VBox>
+</StackPane>
