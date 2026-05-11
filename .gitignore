@@ -57,3 +57,8 @@ installers/
 
 # Old project
 old_project_src_reference/
+data/
+
+# Local build
+build_local.bat
+dist/

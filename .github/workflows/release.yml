@@ -54,7 +54,7 @@ jobs:
             --vendor "Zhuma" `
             --input jpackage-input/ `
             --main-jar onlinegamestore-1.0-SNAPSHOT.jar `
-            --main-class com.sochka.onlinegamestore.OnlineGameStoreApplication `
+            --main-jar onlinegamestore-1.0-SNAPSHOT.jar `
             --icon packaging/icon.ico `
             --dest dist/ `
             --win-dir-chooser `
@@ -71,7 +71,7 @@ jobs:
             --vendor "Zhuma" \
             --input jpackage-input/ \
             --main-jar onlinegamestore-1.0-SNAPSHOT.jar \
-            --main-class com.sochka.onlinegamestore.OnlineGameStoreApplication \
+            --main-jar onlinegamestore-1.0-SNAPSHOT.jar \
             --dest dist/ \
             --linux-shortcut
 
