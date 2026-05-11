@@ -1,4 +1,4 @@
-# 🎮 Online Game Store Management System
+# Online Game Store Management System
 
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.x-green.svg)](https://spring.io/projects/spring-boot)
@@ -40,7 +40,7 @@ A professional enterprise-grade desktop retail management suite for digital asse
 
 ---
 
-## 🛠 Technical Architecture
+## Technical Architecture
 
 Built on solid, cloud-native and enterprise frameworks:
 
@@ -57,15 +57,15 @@ Built on solid, cloud-native and enterprise frameworks:
 
 ---
 
-## 🏗 Deployment Instructions
+## Deployment Instructions
 
 ### 1. Local Execution
 Requirements: **JDK 21+** and **Apache Maven**.
 
 Clone and boot immediately using the embedded database engine:
 ```bash
-git clone https://github.com/youruser/onlinegamestore.git
-cd onlinegamestore
+git clone https://github.com/AlexS819/OnlineGameStore.git
+cd OnlineGameStore
 mvn spring-boot:run
 ```
 
@@ -79,7 +79,7 @@ mvn clean package
 
 ---
 
-## 📂 Developer Manifest
+## Developer Manifest
 
 ```text
 src/main/java/com/sochka/onlinegamestore/
