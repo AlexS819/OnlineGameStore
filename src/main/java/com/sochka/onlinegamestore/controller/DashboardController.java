@@ -62,6 +62,7 @@ public class DashboardController {
     private final com.sochka.onlinegamestore.ui.UserSession userSession;
     private final com.sochka.onlinegamestore.ui.SceneSwitcher sceneSwitcher;
     private final com.sochka.onlinegamestore.service.UserService userService;
+    private final com.sochka.onlinegamestore.infrastructure.LiqPayService liqPayService;
 
     @FXML
     private TableView<GameDTO> gamesTable;
@@ -367,6 +368,7 @@ public class DashboardController {
         publishersBtn.setOnAction(e -> showPublishersView());
         genresBtn.setOnAction(e -> showGenresView());
         profileBtn.setOnAction(e -> showProfileView());
+        topUpBalanceBtn.setOnAction(e -> handleTopUpBalance());
 
         twoFactorCheckbox.setOnAction(e -> {
             try {
@@ -475,6 +477,110 @@ public class DashboardController {
 
         profileView.setVisible(true);
         profileView.setManaged(true);
+    }
+
+    private void handleTopUpBalance() {
+        // 1. Prompt for top-up amount
+        TextInputDialog amountDialog = new TextInputDialog("10.00");
+        amountDialog.setTitle("Wallet Top Up");
+        amountDialog.setHeaderText("Add Funds to Store Balance");
+        amountDialog.setContentText("Enter top-up amount in USD (minimum $1.00):");
+
+        java.util.Optional<String> amountResult = amountDialog.showAndWait();
+        if (amountResult.isPresent()) {
+            String inputStr = amountResult.get().trim();
+            BigDecimal amount;
+            try {
+                amount = new BigDecimal(inputStr);
+                if (amount.compareTo(BigDecimal.ONE) < 0) {
+                    showError("Invalid Amount", "The minimum top-up amount is $1.00.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                showError("Invalid Amount", "Please enter a valid numeric value.");
+                return;
+            }
+
+            // 2. Generate unique order ID
+            String orderId = "TOPUP-" + UUID.randomUUID().toString().substring(0, 8) + "-" + System.currentTimeMillis();
+
+            try {
+                // 3. Generate HTML content
+                String htmlContent = liqPayService.generateCheckoutHtml(
+                        orderId,
+                        amount,
+                        userSession.getCurrentUser().getEmail()
+                );
+
+                // 4. Write HTML to temporary file inside the workspace
+                File tempDir = new File("target/liqpay");
+                if (!tempDir.exists()) {
+                    tempDir.mkdirs();
+                }
+                File tempFile = new File(tempDir, "checkout-" + orderId + ".html");
+                try (java.io.FileWriter writer = new java.io.FileWriter(tempFile)) {
+                    writer.write(htmlContent);
+                }
+
+                // 5. Open local HTML file in default system browser
+                if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                    java.awt.Desktop.getDesktop().browse(tempFile.toURI());
+                } else {
+                    // Fallback
+                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + tempFile.getAbsolutePath());
+                }
+
+                // 6. Show "Awaiting Payment" verification dialog in JavaFX
+                Alert awaitingAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                awaitingAlert.setTitle("LiqPay Checkout");
+                awaitingAlert.setHeaderText("Awaiting Sandbox Payment Completion");
+                awaitingAlert.setContentText("We have opened the LiqPay Sandbox page in your web browser.\n\n" +
+                        "1. Complete the test transaction in your browser (use any test card details).\n" +
+                        "2. Once done, return here and click 'Confirm Payment' to verify and credit your wallet.");
+
+                ButtonType confirmBtnType = new ButtonType("Confirm Payment", ButtonBar.ButtonData.OK_DONE);
+                ButtonType cancelBtnType = new ButtonType("Cancel Top Up", ButtonBar.ButtonData.CANCEL_CLOSE);
+                awaitingAlert.getButtonTypes().setAll(confirmBtnType, cancelBtnType);
+
+                java.util.Optional<ButtonType> alertResult = awaitingAlert.showAndWait();
+                if (alertResult.isPresent() && alertResult.get() == confirmBtnType) {
+                    // Call LiqPay Status API
+                    boolean verified = liqPayService.verifyPaymentStatus(orderId);
+                    if (verified) {
+                        // Credit wallet balance
+                        userService.topUpBalance(userSession.getCurrentUser().getId(), amount);
+                        // Update local session
+                        userSession.getCurrentUser().setBalance(userSession.getCurrentUser().getBalance().add(amount));
+                        // Refresh Profile view
+                        showProfileView();
+
+                        Alert success = new Alert(Alert.AlertType.INFORMATION);
+                        success.setTitle("Top Up Successful!");
+                        success.setHeaderText("Wallet Credited!");
+                        success.setContentText("Transaction verified successfully. $" + amount + " has been added to your balance.\n" +
+                                "A receipt has been dispatched to your email address!");
+                        success.showAndWait();
+                    } else {
+                        showError("Verification Failed", "LiqPay reported that the transaction is not completed or has failed.\n\n" +
+                                "Please make sure you finished the payment in the browser before confirming.");
+                    }
+                }
+
+                // Clean up temporary HTML file safely after transaction
+                tempFile.deleteOnExit();
+
+            } catch (Exception ex) {
+                showError("Top Up Error", "Failed to initiate payment sequence: " + ex.getMessage());
+            }
+        }
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     /**
@@ -644,6 +750,14 @@ public class DashboardController {
             try {
                 OrderDTO purchaseOrder = viewModel.buyGame(userSession.getCurrentUser().getId(),
                       game.getId());
+                
+                // Update local session balance dynamically
+                if (!userSession.isAdmin() && userSession.getCurrentUser().getBalance() != null) {
+                    userSession.getCurrentUser().setBalance(
+                        userSession.getCurrentUser().getBalance().subtract(game.getPrice())
+                    );
+                }
+
                 String key = purchaseOrder.getActivationKey();
 
                 viewModel.loadOrders(userSession.getCurrentUser().getId(),

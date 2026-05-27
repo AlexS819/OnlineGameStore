@@ -149,4 +149,27 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("2FA successfully set to {} for user: {}", enabled, user.getEmail());
     }
+
+    @Override
+    @Transactional
+    public void topUpBalance(java.util.UUID userId, java.math.BigDecimal amount) {
+        log.info("Attempting to credit balance for user: {} by amount: {}", userId, amount);
+        if (amount == null || amount.compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Top-up amount must be positive.");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+        user.setBalance(user.getBalance().add(amount));
+        userRepository.save(user);
+        
+        emailSender.send(user.getEmail(),
+                "Online Game Store - Wallet Credited Successfully",
+                "Hello " + user.getName() + ",\n\n" +
+                "Your store wallet has been successfully credited with: $" + amount + "\n" +
+                "Your new store balance is: $" + user.getBalance() + "\n\n" +
+                "Thank you for choosing Online Game Store!");
+                
+        log.info("Successfully credited user {} by ${}. New balance: ${}", user.getEmail(), amount, user.getBalance());
+    }
 }

@@ -36,6 +36,15 @@ public class OrderServiceImpl implements OrderService {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException("Game not found"));
 
+        // Deduct price from balance for regular users
+        if (user.getRole() != com.sochka.onlinegamestore.domain.UserRole.ADMIN && !"admin@gamestore.com".equalsIgnoreCase(user.getEmail())) {
+            if (user.getBalance().compareTo(game.getPrice()) < 0) {
+                throw new ServiceException("Insufficient balance. Please top up your wallet in Profile & Settings.");
+            }
+            user.setBalance(user.getBalance().subtract(game.getPrice()));
+            userRepository.save(user);
+        }
+
         // Find available key
         ActivationKey availableKey = keyRepository.findAll().stream()
                 .filter(k -> KeyStatus.AVAILABLE.equals(k.getStatus()) && k.getGame() != null && k.getGame().getId().equals(gameId))

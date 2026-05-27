@@ -17,4 +17,5 @@ public interface UserService {
     void deleteAccount(UUID id, String currentPassword);
     void resetPassword(String email, String newPassword);
     void toggleTwoFactor(java.util.UUID userId, boolean enabled);
+    void topUpBalance(java.util.UUID userId, java.math.BigDecimal amount);
 }
