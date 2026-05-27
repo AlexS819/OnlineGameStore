@@ -18,6 +18,8 @@ public class UserMapper {
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .role(entity.getRole() != null ? entity.getRole().name() : "USER")
+                .twoFactorEnabled(entity.isTwoFactorEnabled())
+                .balance(entity.getBalance())
                 .build();
     }
 }

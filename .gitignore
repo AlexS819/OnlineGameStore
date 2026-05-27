@@ -62,3 +62,9 @@ data/
 # Local build
 build_local.bat
 dist/
+collect_code.ps1
+collect_code.py
+project_code_listing.txt
+
+# Local secrets & environment configuration
+.env

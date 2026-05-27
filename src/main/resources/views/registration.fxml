@@ -34,7 +34,7 @@
             </VBox>
         </VBox>
 
-        <Label fx:id="errorLabel" text="" styleClass="message-label" style="-fx-text-fill: #E74C3C;"/>
+        <Label fx:id="errorLabel" text="" styleClass="message-label" style="-fx-text-fill: #E74C3C;" wrapText="true" textAlignment="CENTER"/>
 
         <VBox alignment="CENTER" spacing="12">
             <Button fx:id="registerBtn" text="Initialize Account" maxWidth="Infinity" styleClass="primary-button"/>

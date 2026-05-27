@@ -46,14 +46,37 @@ public class RegistrationController {
     }
 
     private void handleRegistration() {
-        if (viewModel.performRegistration()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Profile Verified");
-            alert.setHeaderText("Welcome to Online Game Store!");
-            alert.setContentText("Account initialization finished successfully. You may now authenticate.");
-            alert.showAndWait();
+        if (viewModel.sendVerificationCode()) {
+            javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog();
+            dialog.setTitle("Email Verification");
+            dialog.setHeaderText("Verification Code Sent");
+            dialog.setContentText("Please enter the 6-digit confirmation code sent to " + emailField.getText() + ":");
             
-            switchToLogin();
+            java.util.Optional<String> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                String code = result.get();
+                if (viewModel.completeRegistration(code)) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Registration Successful");
+                    alert.setHeaderText("Welcome to Online Game Store!");
+                    alert.setContentText("Account initialization finished successfully. You may now authenticate.");
+                    alert.showAndWait();
+                    
+                    switchToLogin();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Verification Failed");
+                    alert.setHeaderText("Incorrect Code");
+                    alert.setContentText(viewModel.errorMessageProperty().get());
+                    alert.showAndWait();
+                }
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Registration Error");
+            alert.setHeaderText("Validation Failed");
+            alert.setContentText(viewModel.errorMessageProperty().get());
+            alert.showAndWait();
         }
     }
 

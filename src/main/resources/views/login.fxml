@@ -37,7 +37,8 @@
         <VBox alignment="CENTER" spacing="10">
             <Button fx:id="loginBtn" text="Log In" maxWidth="Infinity" styleClass="primary-button"/>
             <Button fx:id="goToRegisterBtn" text="Create New Account" style="-fx-background-color: transparent; -fx-text-fill: #1877F2; -fx-cursor: hand;"/>
-            <Label fx:id="messageLabel" text="" styleClass="message-label"/>
+            <Button fx:id="forgotPasswordBtn" text="Forgot Password?" style="-fx-background-color: transparent; -fx-text-fill: #7289da; -fx-cursor: hand;"/>
+            <Label fx:id="messageLabel" text="" styleClass="message-label" wrapText="true" textAlignment="CENTER"/>
         </VBox>
 
     </VBox>

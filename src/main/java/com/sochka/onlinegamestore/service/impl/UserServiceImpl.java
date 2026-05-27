@@ -116,4 +116,37 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
         log.info("Account completely eradicated from corporate systems: {}", user.getEmail());
     }
+
+    @Override
+    @Transactional
+    public void resetPassword(String email, String newPassword) {
+        log.info("Attempting to reset password for email: {}", email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Account with this email not found."));
+
+        if (user.getRole() == com.sochka.onlinegamestore.domain.UserRole.ADMIN || "admin@gamestore.com".equalsIgnoreCase(email)) {
+            throw new AuthenticationException("Password reset is not permitted for administrator accounts.");
+        }
+
+        String securePassword = passwordHasher.hash(newPassword);
+        user.setPasswordHash(securePassword);
+        userRepository.save(user);
+        log.info("Successfully reset password for user ID: {}", user.getId());
+    }
+
+    @Override
+    @Transactional
+    public void toggleTwoFactor(java.util.UUID userId, boolean enabled) {
+        log.info("Toggling 2FA for user ID: {} to {}", userId, enabled);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+
+        if (enabled && (user.getRole() == com.sochka.onlinegamestore.domain.UserRole.ADMIN || "admin@gamestore.com".equalsIgnoreCase(user.getEmail()))) {
+            throw new AuthenticationException("Two-factor authentication cannot be enabled for administrator accounts.");
+        }
+
+        user.setTwoFactorEnabled(enabled);
+        userRepository.save(user);
+        log.info("2FA successfully set to {} for user: {}", enabled, user.getEmail());
+    }
 }

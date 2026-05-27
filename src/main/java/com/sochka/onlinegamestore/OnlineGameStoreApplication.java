@@ -22,6 +22,7 @@ import com.sochka.onlinegamestore.repository.UserRepository;
 public class OnlineGameStoreApplication {
 
     public static void main(String[] args) {
+        com.sochka.onlinegamestore.infrastructure.EnvLoader.load();
         Application.launch(JavaFxApp.class, args);
     }
 

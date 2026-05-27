@@ -15,4 +15,6 @@ public interface UserService {
     UserDTO findById(UUID id);
     List<UserDTO> findAll();
     void deleteAccount(UUID id, String currentPassword);
+    void resetPassword(String email, String newPassword);
+    void toggleTwoFactor(java.util.UUID userId, boolean enabled);
 }

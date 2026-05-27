@@ -37,6 +37,14 @@ public class User extends BaseEntity implements Comparable<User> {
     @Column(name = "role", length = 20, nullable = false)
     private UserRole role;
 
+    @Builder.Default
+    @Column(name = "two_factor_enabled", nullable = false)
+    private boolean twoFactorEnabled = false;
+
+    @Builder.Default
+    @Column(name = "balance", precision = 10, scale = 2, nullable = false)
+    private java.math.BigDecimal balance = java.math.BigDecimal.ZERO;
+
     @Override
     public int compareTo(User o) {
         return this.name.compareTo(o.name);
