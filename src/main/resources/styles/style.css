@@ -74,27 +74,30 @@
 
 /* Sidebar Dashboard Styles */
 .sidebar {
-    -fx-background-color: #1C1E21; /* Dark readable menu for focus contrast */
+    -fx-background-color: #FFFFFF; /* Clean white sidebar */
+    -fx-border-color: transparent #E4E6EB transparent transparent;
     -fx-padding: 20px 10px;
 }
 
 .sidebar-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #E4E6EB;
+    -fx-text-fill: #4B4F56;
     -fx-font-size: 14px;
+    -fx-font-weight: bold;
     -fx-padding: 12px 15px;
     -fx-alignment: CENTER_LEFT;
     -fx-cursor: hand;
-    -fx-background-radius: 5px;
+    -fx-background-radius: 8px;
 }
 
 .sidebar-btn:hover {
-    -fx-background-color: #3A3B3C;
+    -fx-background-color: #F0F2F5;
+    -fx-text-fill: #1877F2;
 }
 
 .sidebar-logo {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-size: 18px;
+    -fx-text-fill: #1C1E21;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-padding: 0 0 20px 10px;
 }
@@ -141,4 +144,82 @@
 
 .table-row-cell:selected .table-cell {
     -fx-text-fill: #FFFFFF;
+}
+
+/* Game Card Styles */
+.game-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E4E6EB;
+    -fx-border-radius: 10px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 8, 0, 0, 4);
+    -fx-cursor: hand;
+}
+.game-card:hover {
+    -fx-border-color: #1877F2;
+    -fx-effect: dropshadow(three-pass-box, rgba(24, 119, 242, 0.3), 12, 0, 0, 4);
+}
+
+.game-card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1C1E21;
+}
+.game-card-price {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #28a745;
+}
+.game-card-genre {
+    -fx-font-size: 12px;
+    -fx-text-fill: #606770;
+}
+.game-card-stock {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+.game-card-stock-in {
+    -fx-text-fill: green;
+}
+.game-card-stock-out {
+    -fx-text-fill: red;
+}
+
+/* Carousel Styles */
+.carousel-container {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+    -fx-border-color: #E4E6EB;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 15, 0, 0, 5);
+}
+.carousel-banner {
+    -fx-background-radius: 12px;
+}
+.carousel-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 2);
+}
+.carousel-price {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: rgba(40, 167, 69, 0.9);
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 20px;
+}
+.carousel-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-background-radius: 25px;
+    -fx-cursor: hand;
+    -fx-padding: 10px 15px;
+}
+.carousel-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
 }

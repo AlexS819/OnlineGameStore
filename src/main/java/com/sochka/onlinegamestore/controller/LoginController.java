@@ -55,7 +55,7 @@ public class LoginController {
              Stage stage = (Stage) loginBtn.getScene().getWindow();
              
              // Seamless transition to main control panel
-             sceneSwitcher.switchScene(stage, "/views/dashboard.fxml", "Game Store - Dashboard", 1100, 700);
+             sceneSwitcher.switchScene(stage, "/views/dashboard.fxml", "Game Store - Dashboard", 1366, 768);
         } else {
              if (viewModel.isTwoFactorRequired()) {
                  messageLabel.setStyle("-fx-text-fill: #1877F2;"); // Nice soft blue for informative messages instead of scary red!
@@ -70,7 +70,7 @@ public class LoginController {
                      if (viewModel.completeTwoFactorLogin(code)) {
                          messageLabel.setStyle("-fx-text-fill: #2ECC71;");
                          Stage stage = (Stage) loginBtn.getScene().getWindow();
-                         sceneSwitcher.switchScene(stage, "/views/dashboard.fxml", "Game Store - Dashboard", 1100, 700);
+                         sceneSwitcher.switchScene(stage, "/views/dashboard.fxml", "Game Store - Dashboard", 1366, 768);
                      } else {
                          messageLabel.setStyle("-fx-text-fill: #E74C3C;");
                          showError("Verification Failed", viewModel.feedbackMessageProperty().get());

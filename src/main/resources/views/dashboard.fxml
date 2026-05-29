@@ -8,7 +8,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.sochka.onlinegamestore.controller.DashboardController"
             stylesheets="@../styles/style.css"
-            prefWidth="1100.0" prefHeight="700.0">
+            prefWidth="1366.0" prefHeight="768.0">
 
     <!-- Sidebar Navigation -->
     <left>
@@ -41,34 +41,29 @@
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox HBox.hgrow="ALWAYS">
                         <Label text="Game Catalog" styleClass="page-title"/>
-                        <Label text="Manage, update and track available digital titles." styleClass="sub-header-text"/>
+                        <Label text="Manage, update and track available digital titles." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
                     <!-- Real-time Filters & Search -->
                     <HBox spacing="10.0" alignment="CENTER_RIGHT">
                         <MenuButton fx:id="publisherFilterMenu" text="Publishers" prefWidth="150.0"/>
                         <MenuButton fx:id="genreFilterMenu" text="Genres" prefWidth="150.0"/>
-                        <Button fx:id="clearFiltersBtn" text="✖" style="-fx-background-color: #e4e6eb; -fx-text-fill: #4b4f56; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-padding: 5 12 5 12; -fx-cursor: hand;"/>
+                        <Button fx:id="clearFiltersBtn" text="Clear Filters" style="-fx-background-color: #e4e6eb; -fx-text-fill: #4b4f56; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-padding: 5 12 5 12; -fx-cursor: hand;"/>
                         <TextField fx:id="searchField" promptText="Search games by title..." prefWidth="200.0"/>
                         <Button fx:id="addProductBtn" text="+ Add New Product" styleClass="primary-button"/>
                     </HBox>
                 </HBox>
 
-                <!-- Main Inventory Visualization Table -->
-                <TableView fx:id="gamesTable" VBox.vgrow="ALWAYS">
-                    <placeholder>
-                        <Label text="No matching games currently located in catalog." styleClass="sub-header-text"/>
-                    </placeholder>
-                    <columns>
-                        <TableColumn fx:id="titleColumn" text="Product Title" prefWidth="250.0" />
-                        <TableColumn fx:id="publisherColumn" text="Publisher" prefWidth="150.0" />
-                        <TableColumn fx:id="genreColumn" text="Genres" prefWidth="200.0" />
-                        <TableColumn fx:id="priceColumn" text="Price ($)" prefWidth="100.0" />
-                        <TableColumn fx:id="stockColumn" text="Stock Status" prefWidth="130.0" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                </TableView>
+                <!-- Featured Carousel Area -->
+                <StackPane fx:id="carouselContainer" styleClass="carousel-container" prefHeight="220.0" minHeight="220.0" VBox.vgrow="NEVER">
+                    <!-- Dynamic content will be injected by controller -->
+                </StackPane>
+
+                <!-- Games Grid Visualization -->
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 0; -fx-border-color: transparent; -fx-background-insets: 0;">
+                    <content>
+                        <FlowPane fx:id="gamesFlowPane" hgap="20.0" vgap="20.0" style="-fx-padding: 10;" alignment="TOP_LEFT"/>
+                    </content>
+                </ScrollPane>
             </VBox>
 
             <!-- INVENTORY VIEW -->
@@ -76,7 +71,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox HBox.hgrow="ALWAYS">
                         <Label text="Key Inventory" styleClass="page-title"/>
-                        <Label text="Manage activation keys and bind them to games." styleClass="sub-header-text"/>
+                        <Label text="Manage activation keys and bind them to games." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
                     <HBox spacing="10.0" alignment="CENTER_RIGHT">
                         <Button fx:id="addKeyBtn" text="+ Stock New Key" styleClass="primary-button"/>
@@ -106,7 +101,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Purchase History" styleClass="page-title"/>
-                        <Label text="Track acquired games, review transactions, and retrieve serial codes." styleClass="sub-header-text"/>
+                        <Label text="Track acquired games, review transactions, and retrieve serial codes." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
                     <Button fx:id="exportOrdersBtn" text="📥 Export Log to Excel" styleClass="action-btn" />
                 </HBox>
@@ -133,7 +128,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Publishers Management" styleClass="page-title"/>
-                        <Label text="Manage distribution partners and companies." styleClass="sub-header-text"/>
+                        <Label text="Manage distribution partners and companies." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
                     <Button fx:id="addPublisherBtn" text="➕ New Publisher" styleClass="action-btn" />
                 </HBox>
@@ -153,7 +148,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15.0">
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                         <Label text="Genres Management" styleClass="page-title"/>
-                        <Label text="Manage catalog categorizations." styleClass="sub-header-text"/>
+                        <Label text="Manage catalog categorizations." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
                     <Button fx:id="addGenreBtn" text="➕ New Genre" styleClass="action-btn" />
                 </HBox>
@@ -170,7 +165,7 @@
             <VBox fx:id="profileView" spacing="20.0" visible="false" managed="false" styleClass="main-content">
                 <VBox spacing="5">
                     <Label text="My Profile &amp; Settings" styleClass="page-title"/>
-                    <Label text="Manage your security preferences and store balance." styleClass="sub-header-text"/>
+                    <Label text="Manage your security preferences and store balance." styleClass="sub-header-text" wrapText="true"/>
                 </VBox>
                 
                 <Separator opacity="0.2"/>

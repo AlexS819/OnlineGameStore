@@ -79,6 +79,25 @@ mvn clean package
 
 ---
 
+## Configuration (Environment Variables)
+
+The application relies on environment variables for sensitive integrations (such as email dispatch for 2FA and LiqPay payments). 
+
+For local development or compiled deployments, you must provide these variables. You can either place a `.env` file in the root directory (next to the executable or in the project root) or configure them directly as **System Environment Variables**.
+
+**Required Keys (`.env` example):**
+```ini
+# SMTP Email configuration (Gmail)
+SMTP_USERNAME={email@gmail.com}
+SMTP_PASSWORD={password}
+
+# LiqPay Sandbox Payment Configuration
+LIQPAY_PUBLIC_KEY={sandbox_...}
+LIQPAY_PRIVATE_KEY={sandbox_...}
+```
+
+---
+
 ## Developer Manifest
 
 ```text

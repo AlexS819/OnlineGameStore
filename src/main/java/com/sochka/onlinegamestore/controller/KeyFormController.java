@@ -34,6 +34,17 @@ public class KeyFormController {
         
         keyField.textProperty().bindBidirectional(viewModel.keyValueProperty());
         gameCombo.setItems(viewModel.getGames());
+        gameCombo.setConverter(new javafx.util.StringConverter<GameDTO>() {
+            @Override
+            public String toString(GameDTO object) {
+                return object == null ? "" : object.getTitle();
+            }
+
+            @Override
+            public GameDTO fromString(String string) {
+                return null;
+            }
+        });
         gameCombo.valueProperty().bindBidirectional(viewModel.selectedGameProperty());
         errorLabel.textProperty().bind(viewModel.errorMessageProperty());
         

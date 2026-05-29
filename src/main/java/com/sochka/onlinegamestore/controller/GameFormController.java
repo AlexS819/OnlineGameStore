@@ -44,10 +44,28 @@ public class GameFormController {
         titleField.textProperty().bindBidirectional(viewModel.titleProperty());
         priceField.textProperty().bindBidirectional(viewModel.priceProperty());
         publisherCombo.setItems(viewModel.getPublishers());
+        publisherCombo.setConverter(new javafx.util.StringConverter<PublisherDTO>() {
+            @Override
+            public String toString(PublisherDTO object) {
+                return object == null ? "" : object.getName();
+            }
+
+            @Override
+            public PublisherDTO fromString(String string) {
+                return null;
+            }
+        });
         publisherCombo.valueProperty().bindBidirectional(viewModel.selectedPublisherProperty());
         errorLabel.textProperty().bind(viewModel.errorMessageProperty());
         
         genreListView.setItems(viewModel.getGenres());
+        genreListView.setCellFactory(lv -> new javafx.scene.control.ListCell<com.sochka.onlinegamestore.dto.GenreDTO>() {
+            @Override
+            protected void updateItem(com.sochka.onlinegamestore.dto.GenreDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getName());
+            }
+        });
         genreListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         
         // Listen to selection changes to update view model

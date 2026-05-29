@@ -43,6 +43,11 @@ public class JavaFxApp extends Application {
 
         Parent root = loader.load();
         primaryStage.setTitle("Online Game Store - Authorization");
+        try {
+            primaryStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/icon.png")));
+        } catch (Exception e) {
+            System.err.println("Failed to load icon: " + e.getMessage());
+        }
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
         primaryStage.show();

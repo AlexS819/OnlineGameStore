@@ -41,6 +41,16 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.geometry.Pos;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -65,17 +75,12 @@ public class DashboardController {
     private final com.sochka.onlinegamestore.infrastructure.LiqPayService liqPayService;
 
     @FXML
-    private TableView<GameDTO> gamesTable;
+    private FlowPane gamesFlowPane;
     @FXML
-    private TableColumn<GameDTO, String> titleColumn;
-    @FXML
-    private TableColumn<GameDTO, String> publisherColumn;
-    @FXML
-    private TableColumn<GameDTO, java.util.Set<String>> genreColumn;
-    @FXML
-    private TableColumn<GameDTO, BigDecimal> priceColumn;
-    @FXML
-    private TableColumn<GameDTO, Integer> stockColumn;
+    private StackPane carouselContainer;
+
+    private Timeline carouselTimeline;
+    private int currentCarouselIndex = 0;
 
     @FXML
     private TextField searchField;
@@ -196,45 +201,10 @@ public class DashboardController {
     @FXML
     public void initialize() {
         // 1. Initialize data presentation mapping
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        publisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisherName"));
-        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreNames"));
-        genreColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(java.util.Set<String> item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null || item.isEmpty()) {
-                    setText("");
-                } else {
-                    setText(String.join(", ", item));
-                }
-            }
+        viewModel.getGameList().addListener((javafx.collections.ListChangeListener.Change<? extends GameDTO> c) -> {
+            updateGameGrid();
+            updateCarousel();
         });
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        // Custom visual indicator for stock availability
-        stockColumn.setCellValueFactory(new PropertyValueFactory<>("availableKeysCount"));
-        stockColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle(""); // Ensure visual state wipe for reuse cycles
-                } else {
-                    if (item > 0) {
-                        setText("In Stock (" + item + ")");
-                        setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-                    } else {
-                        setText("OUT OF STOCK");
-                        setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                    }
-                }
-            }
-        });
-
-        // 2. Synchronize data streams
-        gamesTable.setItems(viewModel.getGameList());
 
         // 2.5 Configure Key Inventory columns
         keyIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -396,7 +366,6 @@ public class DashboardController {
         enforcePermissions();
 
         // 6. Setup right-click Context Menu for full CRUD actions
-        setupRowFactory();
         setupKeyRowFactory();
         setupOrderRowFactory();
         setupPublisherRowFactory();
@@ -404,6 +373,8 @@ public class DashboardController {
 
         // 7. Run initial catalog population
         viewModel.loadAllGames();
+        updateGameGrid();
+        updateCarousel();
         viewModel.loadAllKeys();
         viewModel.loadPublishers();
         viewModel.loadGenres();
@@ -673,60 +644,153 @@ public class DashboardController {
         }
     }
 
-    private void setupRowFactory() {
-        gamesTable.setRowFactory(tv -> {
-            TableRow<GameDTO> row = new TableRow<>();
+    private void updateGameGrid() {
+        gamesFlowPane.getChildren().clear();
+        for (GameDTO game : viewModel.getGameList()) {
+            gamesFlowPane.getChildren().add(createGameCard(game));
+        }
+    }
 
-            // Double click to buy
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY
-                      && event.getClickCount() == 2) {
-                    handleBuyGame(row.getItem());
-                }
-            });
+    private Node createGameCard(GameDTO game) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("game-card");
+        card.setPrefWidth(220);
+        card.setPrefHeight(150);
 
-            ContextMenu menu = new ContextMenu();
-            MenuItem buyItem = new MenuItem("🛒 Buy Game");
-            buyItem.setOnAction(e -> {
-                GameDTO selectedItem = row.getItem();
-                if (selectedItem != null) {
-                    handleBuyGame(selectedItem);
-                }
-            });
-            menu.getItems().add(buyItem);
+        Label title = new Label(game.getTitle());
+        title.getStyleClass().add("game-card-title");
 
-            // Authorization Safeguard: Only construct modifying context menu if user is
-            // privileged
-            if (userSession.isAdmin()) {
-                menu.getItems().add(new SeparatorMenuItem());
+        Label price = new Label("$" + game.getPrice());
+        price.getStyleClass().add("game-card-price");
 
-                MenuItem editItem = new MenuItem("🖊 Edit Product Details");
-                MenuItem deleteItem = new MenuItem("🗑 Delete This Title");
+        Label genres = new Label(game.getGenreNames() != null && !game.getGenreNames().isEmpty() ? String.join(", ", game.getGenreNames()) : "No Genre");
+        genres.getStyleClass().add("game-card-genre");
 
-                editItem.setOnAction(e -> {
-                    GameDTO selectedItem = row.getItem();
-                    if (selectedItem != null) {
-                        handleOpenForm(selectedItem);
-                    }
-                });
+        Label stock = new Label();
+        stock.getStyleClass().add("game-card-stock");
+        if (game.getAvailableKeysCount() > 0) {
+            stock.setText("In Stock (" + game.getAvailableKeysCount() + ")");
+            stock.getStyleClass().add("game-card-stock-in");
+        } else {
+            stock.setText("OUT OF STOCK");
+            stock.getStyleClass().add("game-card-stock-out");
+        }
 
-                deleteItem.setOnAction(e -> {
-                    GameDTO selectedItem = row.getItem();
-                    if (selectedItem != null) {
-                        handleDeletion(selectedItem);
-                    }
-                });
+        card.getChildren().addAll(title, price, genres, stock);
 
-                menu.getItems().addAll(editItem, deleteItem);
+        // Double click to buy
+        card.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                handleBuyGame(game);
             }
-
-            row.contextMenuProperty().bind(
-                  javafx.beans.binding.Bindings.when(row.emptyProperty())
-                        .then((ContextMenu) null)
-                        .otherwise(menu));
-
-            return row;
         });
+
+        // Context Menu
+        ContextMenu menu = new ContextMenu();
+        MenuItem buyItem = new MenuItem("🛒 Buy Game");
+        buyItem.setOnAction(e -> handleBuyGame(game));
+        menu.getItems().add(buyItem);
+
+        if (userSession.isAdmin()) {
+            menu.getItems().add(new SeparatorMenuItem());
+            MenuItem editItem = new MenuItem("🖊 Edit Product Details");
+            MenuItem deleteItem = new MenuItem("🗑 Delete This Title");
+            editItem.setOnAction(e -> handleOpenForm(game));
+            deleteItem.setOnAction(e -> handleDeletion(game));
+            menu.getItems().addAll(editItem, deleteItem);
+        }
+
+        card.setOnContextMenuRequested(event -> {
+            menu.show(card, event.getScreenX(), event.getScreenY());
+        });
+
+        return card;
+    }
+
+    private void updateCarousel() {
+        carouselContainer.getChildren().clear();
+        if (carouselTimeline != null) {
+            carouselTimeline.stop();
+        }
+
+        java.util.List<GameDTO> featuredGames = new java.util.ArrayList<>();
+        for (int i = 0; i < Math.min(3, viewModel.getGameList().size()); i++) {
+            featuredGames.add(viewModel.getGameList().get(i));
+        }
+
+        if (featuredGames.isEmpty()) {
+            carouselContainer.setVisible(false);
+            carouselContainer.setManaged(false);
+            return;
+        }
+
+        carouselContainer.setVisible(true);
+        carouselContainer.setManaged(true);
+
+        currentCarouselIndex = 0;
+        showCarouselSlide(featuredGames);
+
+        carouselTimeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
+            currentCarouselIndex = (currentCarouselIndex + 1) % featuredGames.size();
+            showCarouselSlide(featuredGames);
+        }));
+        carouselTimeline.setCycleCount(Timeline.INDEFINITE);
+        carouselTimeline.play();
+    }
+
+    private void showCarouselSlide(java.util.List<GameDTO> featuredGames) {
+        carouselContainer.getChildren().clear();
+        if (featuredGames.isEmpty()) return;
+
+        GameDTO game = featuredGames.get(currentCarouselIndex);
+
+        BorderPane slide = new BorderPane();
+        slide.getStyleClass().add("carousel-banner");
+        slide.setStyle("-fx-padding: 30; -fx-background-color: linear-gradient(to right, #1877F2, #00C6FF); -fx-background-radius: 12px;");
+
+        VBox info = new VBox(15);
+        info.setAlignment(Pos.CENTER_LEFT);
+        
+        Label title = new Label(game.getTitle());
+        title.getStyleClass().add("carousel-title");
+        
+        Label publisher = new Label("By " + game.getPublisherName());
+        publisher.setStyle("-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16px;");
+
+        Label price = new Label("$" + game.getPrice());
+        price.getStyleClass().add("carousel-price");
+
+        Button buyBtn = new Button("Buy Now");
+        buyBtn.getStyleClass().add("carousel-btn");
+        buyBtn.setOnAction(e -> handleBuyGame(game));
+
+        info.getChildren().addAll(title, publisher, price, buyBtn);
+
+        HBox controls = new HBox(10);
+        controls.setAlignment(Pos.BOTTOM_RIGHT);
+        Button prevBtn = new Button("<");
+        prevBtn.getStyleClass().add("carousel-btn");
+        prevBtn.setOnAction(e -> {
+            currentCarouselIndex = (currentCarouselIndex - 1 + featuredGames.size()) % featuredGames.size();
+            showCarouselSlide(featuredGames);
+            if(carouselTimeline != null) carouselTimeline.playFromStart();
+        });
+
+        Button nextBtn = new Button(">");
+        nextBtn.getStyleClass().add("carousel-btn");
+        nextBtn.setOnAction(e -> {
+            currentCarouselIndex = (currentCarouselIndex + 1) % featuredGames.size();
+            showCarouselSlide(featuredGames);
+            if(carouselTimeline != null) carouselTimeline.playFromStart();
+        });
+
+        controls.getChildren().addAll(prevBtn, nextBtn);
+
+        slide.setLeft(info);
+        slide.setRight(controls);
+        BorderPane.setAlignment(controls, Pos.BOTTOM_RIGHT);
+
+        carouselContainer.getChildren().add(slide);
     }
 
     private void handleBuyGame(GameDTO game) {
@@ -762,6 +826,8 @@ public class DashboardController {
 
                 viewModel.loadOrders(userSession.getCurrentUser().getId(),
                       userSession.isAdmin()); // update library
+                viewModel.loadAllGames();
+                viewModel.loadAllKeys();
 
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
                 success.setTitle("Purchase Finalized!");
@@ -884,6 +950,7 @@ public class DashboardController {
 
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             viewModel.deleteSelectedKey(key);
+            viewModel.loadAllGames();
         }
     }
 
@@ -903,7 +970,7 @@ public class DashboardController {
             Stage dialogStage = new Stage();
             dialogStage.setTitle(existingGame == null ? "Add New Game" : "Edit Game Specification");
             dialogStage.initModality(Modality.APPLICATION_MODAL);
-            dialogStage.initOwner(gamesTable.getScene().getWindow());
+            dialogStage.initOwner(gamesFlowPane.getScene().getWindow());
             dialogStage.setScene(new Scene(root));
             dialogStage.setResizable(false);
             dialogStage.showAndWait();
@@ -940,6 +1007,7 @@ public class DashboardController {
 
             if (controller.isSaveConfirmed()) {
                 viewModel.loadAllKeys();
+                viewModel.loadAllGames();
             }
 
         } catch (IOException e) {
