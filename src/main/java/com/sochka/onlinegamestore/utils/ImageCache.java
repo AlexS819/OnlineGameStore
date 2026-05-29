@@ -16,7 +16,11 @@ public class ImageCache {
 
     private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
     private static final String CACHE_SUBDIR = "onlinegamestore_cache";
-    private static final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private static final ExecutorService executor = Executors.newFixedThreadPool(4, r -> {
+        Thread t = new Thread(r);
+        t.setDaemon(true);
+        return t;
+    });
 
     static {
         File dir = new File(TEMP_DIR, CACHE_SUBDIR);
@@ -106,5 +110,9 @@ public class ImageCache {
                 getOrCreateCachedImageFile(url);
             });
         }
+    }
+
+    public static void shutdown() {
+        executor.shutdownNow();
     }
 }

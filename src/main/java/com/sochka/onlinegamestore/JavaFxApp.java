@@ -74,6 +74,7 @@ public class JavaFxApp extends Application {
     @Override
     public void stop() {
         // Gracefully discharge all database and thread pools
+        com.sochka.onlinegamestore.utils.ImageCache.shutdown();
         springContext.close();
         Platform.exit();
     }
