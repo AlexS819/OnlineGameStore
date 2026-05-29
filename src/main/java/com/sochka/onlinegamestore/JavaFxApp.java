@@ -26,6 +26,24 @@ public class JavaFxApp extends Application {
         this.springContext = new SpringApplicationBuilder()
                 .sources(OnlineGameStoreApplication.class)
                 .run(args);
+
+        // Asynchronously pre-cache game cover images
+        java.util.concurrent.ForkJoinPool.commonPool().execute(() -> {
+            try {
+                com.sochka.onlinegamestore.repository.GameRepository gameRepo = 
+                    springContext.getBean(com.sochka.onlinegamestore.repository.GameRepository.class);
+                java.util.List<com.sochka.onlinegamestore.domain.Game> games = gameRepo.findAll();
+                java.util.List<String> urls = new java.util.ArrayList<>();
+                for (com.sochka.onlinegamestore.domain.Game game : games) {
+                    if (game.getImageUrl() != null && !game.getImageUrl().trim().isEmpty()) {
+                        urls.add(game.getImageUrl());
+                    }
+                }
+                com.sochka.onlinegamestore.utils.ImageCache.preCacheImages(urls);
+            } catch (Exception e) {
+                System.err.println("Error pre-caching images: " + e.getMessage());
+            }
+        });
     }
 
     @Override

@@ -30,7 +30,7 @@
         <!-- Left Artwork Column -->
         <VBox alignment="TOP_CENTER" spacing="10.0">
             <StackPane style="-fx-background-color: #f0f2f5; -fx-background-radius: 10px; -fx-border-color: #e4e6eb; -fx-border-radius: 10px; -fx-border-width: 1px; -fx-overflow: hidden; -fx-padding: 5px;">
-                <ImageView fx:id="artworkImageView" fitWidth="240.0" fitHeight="320.0" preserveRatio="false" style="-fx-background-radius: 8px;"/>
+                <ImageView fx:id="artworkImageView" fitWidth="220.0" fitHeight="330.0" preserveRatio="true" style="-fx-background-radius: 8px;"/>
             </StackPane>
         </VBox>
 

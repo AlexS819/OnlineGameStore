@@ -72,8 +72,7 @@ public class GameDetailsController {
         String imgUrl = game.getImageUrl();
         if (imgUrl != null && !imgUrl.trim().isEmpty()) {
             try {
-                // Load asynchronous or fallback
-                Image image = new Image(imgUrl, true);
+                Image image = com.sochka.onlinegamestore.utils.ImageCache.getCachedImage(imgUrl);
                 artworkImageView.setImage(image);
             } catch (Exception ex) {
                 loadPlaceholderImage();
@@ -100,7 +99,7 @@ public class GameDetailsController {
     private void loadPlaceholderImage() {
         // Fallback to online generic cover placeholder
         try {
-            Image image = new Image("https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80", true);
+            Image image = com.sochka.onlinegamestore.utils.ImageCache.getCachedImage("https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80");
             artworkImageView.setImage(image);
         } catch (Exception e) {
             artworkImageView.setImage(null);

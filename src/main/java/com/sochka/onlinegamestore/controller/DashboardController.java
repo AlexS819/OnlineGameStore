@@ -61,7 +61,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
- * Main application dashboard controller responsible for routing visual flows, configuring secure
+ * Main application dashboard controller responsible for routing visual flows,
+ * configuring secure
  * domain visibility bounds, and dispatching catalog interactions.
  */
 @Component
@@ -203,10 +204,10 @@ public class DashboardController {
     public void initialize() {
         // 1. Initialize data presentation mapping
         viewModel.getGameList()
-              .addListener((javafx.collections.ListChangeListener.Change<? extends GameDTO> c) -> {
-                  updateGameGrid();
-                  updateCarousel();
-              });
+                .addListener((javafx.collections.ListChangeListener.Change<? extends GameDTO> c) -> {
+                    updateGameGrid();
+                    updateCarousel();
+                });
 
         // 2.5 Configure Key Inventory columns
         keyIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -294,9 +295,9 @@ public class DashboardController {
         // Setup List Listeners to auto-populate menus whenever source lists update from
         // database
         viewModel.getPublisherList().addListener(
-              (javafx.collections.ListChangeListener.Change<? extends PublisherDTO> c) -> populatePublisherMenu());
+                (javafx.collections.ListChangeListener.Change<? extends PublisherDTO> c) -> populatePublisherMenu());
         viewModel.getGenreList().addListener(
-              (javafx.collections.ListChangeListener.Change<? extends GenreDTO> c) -> populateGenreMenu());
+                (javafx.collections.ListChangeListener.Change<? extends GenreDTO> c) -> populateGenreMenu());
 
         // Initial population
         populatePublisherMenu();
@@ -309,12 +310,12 @@ public class DashboardController {
 
             // Deselect visuals manually
             publisherFilterMenu.getItems().stream()
-                  .filter(it -> it instanceof CheckMenuItem)
-                  .forEach(it -> ((CheckMenuItem) it).setSelected(false));
+                    .filter(it -> it instanceof CheckMenuItem)
+                    .forEach(it -> ((CheckMenuItem) it).setSelected(false));
 
             genreFilterMenu.getItems().stream()
-                  .filter(it -> it instanceof CheckMenuItem)
-                  .forEach(it -> ((CheckMenuItem) it).setSelected(false));
+                    .filter(it -> it instanceof CheckMenuItem)
+                    .forEach(it -> ((CheckMenuItem) it).setSelected(false));
 
             viewModel.performSearch();
         });
@@ -352,7 +353,7 @@ public class DashboardController {
                 alert.setTitle("Two-Factor Authentication");
                 alert.setHeaderText(null);
                 alert.setContentText(
-                      "2FA has been successfully " + (selected ? "enabled" : "disabled") + ".");
+                        "2FA has been successfully " + (selected ? "enabled" : "disabled") + ".");
                 alert.showAndWait();
             } catch (Exception ex) {
                 twoFactorCheckbox.setSelected(!twoFactorCheckbox.isSelected());
@@ -476,15 +477,14 @@ public class DashboardController {
 
             // 2. Generate unique order ID
             String orderId = "TOPUP-" + UUID.randomUUID().toString().substring(0, 8) + "-"
-                  + System.currentTimeMillis();
+                    + System.currentTimeMillis();
 
             try {
                 // 3. Generate HTML content
                 String htmlContent = liqPayService.generateCheckoutHtml(
-                      orderId,
-                      amount,
-                      userSession.getCurrentUser().getEmail()
-                );
+                        orderId,
+                        amount,
+                        userSession.getCurrentUser().getEmail());
 
                 // 4. Write HTML to temporary file inside the workspace
                 File tempDir = new File("target/liqpay");
@@ -498,12 +498,12 @@ public class DashboardController {
 
                 // 5. Open local HTML file in default system browser
                 if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop()
-                      .isSupported(java.awt.Desktop.Action.BROWSE)) {
+                        .isSupported(java.awt.Desktop.Action.BROWSE)) {
                     java.awt.Desktop.getDesktop().browse(tempFile.toURI());
                 } else {
                     // Fallback
                     Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "
-                          + tempFile.getAbsolutePath());
+                            + tempFile.getAbsolutePath());
                 }
 
                 // 6. Show "Awaiting Payment" verification dialog in JavaFX
@@ -511,15 +511,15 @@ public class DashboardController {
                 awaitingAlert.setTitle("LiqPay Checkout");
                 awaitingAlert.setHeaderText("Awaiting Sandbox Payment Completion");
                 awaitingAlert.setContentText(
-                      "We have opened the LiqPay Sandbox page in your web browser.\n\n" +
-                            "1. Complete the test transaction in your browser (use any test card details).\n"
-                            +
-                            "2. Once done, return here and click 'Confirm Payment' to verify and credit your wallet.");
+                        "We have opened the LiqPay Sandbox page in your web browser.\n\n" +
+                                "1. Complete the test transaction in your browser (use any test card details).\n"
+                                +
+                                "2. Once done, return here and click 'Confirm Payment' to verify and credit your wallet.");
 
                 ButtonType confirmBtnType = new ButtonType("Confirm Payment",
-                      ButtonBar.ButtonData.OK_DONE);
+                        ButtonBar.ButtonData.OK_DONE);
                 ButtonType cancelBtnType = new ButtonType("Cancel Top Up",
-                      ButtonBar.ButtonData.CANCEL_CLOSE);
+                        ButtonBar.ButtonData.CANCEL_CLOSE);
                 awaitingAlert.getButtonTypes().setAll(confirmBtnType, cancelBtnType);
 
                 java.util.Optional<ButtonType> alertResult = awaitingAlert.showAndWait();
@@ -531,7 +531,7 @@ public class DashboardController {
                         userService.topUpBalance(userSession.getCurrentUser().getId(), amount);
                         // Update local session
                         userSession.getCurrentUser()
-                              .setBalance(userSession.getCurrentUser().getBalance().add(amount));
+                                .setBalance(userSession.getCurrentUser().getBalance().add(amount));
                         // Refresh Profile view
                         showProfileView();
 
@@ -539,14 +539,14 @@ public class DashboardController {
                         success.setTitle("Top Up Successful!");
                         success.setHeaderText("Wallet Credited!");
                         success.setContentText("Transaction verified successfully. $" + amount
-                              + " has been added to your balance.\n" +
-                              "A receipt has been dispatched to your email address!");
+                                + " has been added to your balance.\n" +
+                                "A receipt has been dispatched to your email address!");
                         success.showAndWait();
                     } else {
                         showError("Verification Failed",
-                              "LiqPay reported that the transaction is not completed or has failed.\n\n"
-                                    +
-                                    "Please make sure you finished the payment in the browser before confirming.");
+                                "LiqPay reported that the transaction is not completed or has failed.\n\n"
+                                        +
+                                        "Please make sure you finished the payment in the browser before confirming.");
                     }
                 }
 
@@ -555,7 +555,7 @@ public class DashboardController {
 
             } catch (Exception ex) {
                 showError("Top Up Error",
-                      "Failed to initiate payment sequence: " + ex.getMessage());
+                        "Failed to initiate payment sequence: " + ex.getMessage());
             }
         }
     }
@@ -611,7 +611,7 @@ public class DashboardController {
         userSession.clear();
         Stage stage = (Stage) signOutBtn.getScene().getWindow();
         sceneSwitcher.switchScene(stage, "/views/login.fxml", "Game Store - Authorization", 800,
-              600);
+                600);
     }
 
     private void handleDeleteProfile() {
@@ -619,10 +619,10 @@ public class DashboardController {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Confirm Identity");
         dialog.setHeaderText(
-              "Action requires identity verification.\nPlease supply current password to authenticate deletion.");
+                "Action requires identity verification.\nPlease supply current password to authenticate deletion.");
 
         ButtonType executeBtn = new ButtonType("Permanently Delete Account",
-              ButtonBar.ButtonData.OK_DONE);
+                ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(executeBtn, ButtonType.CANCEL);
 
         PasswordField field = new PasswordField();
@@ -676,6 +676,7 @@ public class DashboardController {
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Game Details - " + game.getTitle());
+            dialogStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/icon.png")));
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.initOwner(gamesFlowPane.getScene().getWindow());
             dialogStage.setScene(new Scene(root));
@@ -690,29 +691,25 @@ public class DashboardController {
         VBox card = new VBox(8);
         card.getStyleClass().add("game-card");
         card.setPrefWidth(170);
-        card.setPrefHeight(260);
+        card.setPrefHeight(320);
         card.setAlignment(Pos.TOP_CENTER);
         card.setStyle("-fx-cursor: hand;");
 
         ImageView coverView = new ImageView();
         coverView.setFitWidth(150);
-        coverView.setFitHeight(170);
+        coverView.setFitHeight(225);
         coverView.setPreserveRatio(false);
         coverView.setStyle("-fx-background-radius: 6px;");
 
         String imgUrl = game.getImageUrl();
         if (imgUrl != null && !imgUrl.trim().isEmpty()) {
             try {
-                coverView.setImage(new Image(imgUrl, true));
+                coverView.setImage(com.sochka.onlinegamestore.utils.ImageCache.getCachedImage(imgUrl));
             } catch (Exception ex) {
-                coverView.setImage(new Image(
-                      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80",
-                      true));
+                coverView.setImage(com.sochka.onlinegamestore.utils.ImageCache.getCachedImage("https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80"));
             }
         } else {
-            coverView.setImage(
-                  new Image("https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80",
-                        true));
+            coverView.setImage(com.sochka.onlinegamestore.utils.ImageCache.getCachedImage("https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80"));
         }
 
         VBox textContainer = new VBox(4);
@@ -746,6 +743,21 @@ public class DashboardController {
             }
         });
 
+        card.setOnMouseEntered(event -> {
+            javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(javafx.util.Duration.millis(150),
+                    card);
+            st.setToX(1.03);
+            st.setToY(1.03);
+            st.play();
+        });
+        card.setOnMouseExited(event -> {
+            javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(javafx.util.Duration.millis(150),
+                    card);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+        });
+
         // Context Menu
         ContextMenu menu = new ContextMenu();
         MenuItem detailsItem = new MenuItem("View Details");
@@ -757,7 +769,7 @@ public class DashboardController {
         if (userSession.isAdmin()) {
             menu.getItems().add(new SeparatorMenuItem());
             MenuItem editItem = new MenuItem(
-                  "Edit Product Details");
+                    "Edit Product Details");
             MenuItem deleteItem = new MenuItem("Delete This Title");
             editItem.setOnAction(e -> handleOpenForm(game));
             deleteItem.setOnAction(e -> handleDeletion(game));
@@ -778,7 +790,7 @@ public class DashboardController {
         }
 
         java.util.List<GameDTO> featuredGames = new java.util.ArrayList<>();
-        for (int i = 0; i < Math.min(3, viewModel.getGameList().size()); i++) {
+        for (int i = 0; i < viewModel.getGameList().size(); i++) {
             featuredGames.add(viewModel.getGameList().get(i));
         }
 
@@ -813,7 +825,7 @@ public class DashboardController {
         BorderPane slide = new BorderPane();
         slide.getStyleClass().add("carousel-banner");
         slide.setStyle(
-              "-fx-padding: 30; -fx-background-color: linear-gradient(to right, #1877F2, #00C6FF); -fx-background-radius: 12px;");
+                "-fx-padding: 30; -fx-background-color: linear-gradient(to right, #1877F2, #00C6FF); -fx-background-radius: 12px;");
 
         VBox info = new VBox(15);
         info.setAlignment(Pos.CENTER_LEFT);
@@ -838,8 +850,7 @@ public class DashboardController {
         Button prevBtn = new Button("<");
         prevBtn.getStyleClass().add("carousel-btn");
         prevBtn.setOnAction(e -> {
-            currentCarouselIndex =
-                  (currentCarouselIndex - 1 + featuredGames.size()) % featuredGames.size();
+            currentCarouselIndex = (currentCarouselIndex - 1 + featuredGames.size()) % featuredGames.size();
             showCarouselSlide(featuredGames);
             if (carouselTimeline != null) {
                 carouselTimeline.playFromStart();
@@ -871,7 +882,7 @@ public class DashboardController {
             alert.setTitle("Out of Stock");
             alert.setHeaderText("Purchase Impossible");
             alert.setContentText(
-                  "Sorry! There are currently no keys available for '" + game.getTitle() + "'.");
+                    "Sorry! There are currently no keys available for '" + game.getTitle() + "'.");
             alert.showAndWait();
             return;
         }
@@ -880,24 +891,23 @@ public class DashboardController {
         alert.setTitle("Confirm Purchase");
         alert.setHeaderText("Acquiring '" + game.getTitle() + "'");
         alert.setContentText(
-              "Are you sure you want to purchase this game for $" + game.getPrice() + "?");
+                "Are you sure you want to purchase this game for $" + game.getPrice() + "?");
 
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 OrderDTO purchaseOrder = viewModel.buyGame(userSession.getCurrentUser().getId(),
-                      game.getId());
+                        game.getId());
 
                 // Update local session balance dynamically
                 if (!userSession.isAdmin() && userSession.getCurrentUser().getBalance() != null) {
                     userSession.getCurrentUser().setBalance(
-                          userSession.getCurrentUser().getBalance().subtract(game.getPrice())
-                    );
+                            userSession.getCurrentUser().getBalance().subtract(game.getPrice()));
                 }
 
                 String key = purchaseOrder.getActivationKey();
 
                 viewModel.loadOrders(userSession.getCurrentUser().getId(),
-                      userSession.isAdmin()); // update library
+                        userSession.isAdmin()); // update library
                 viewModel.loadAllGames();
                 viewModel.loadAllKeys();
 
@@ -905,7 +915,7 @@ public class DashboardController {
                 success.setTitle("Purchase Finalized!");
                 success.setHeaderText("Operation Successful!");
                 success.setContentText(
-                      "Code provisioned securely. Click 'Copy Key' or download official receipt.");
+                        "Code provisioned securely. Click 'Copy Key' or download official receipt.");
 
                 TextField keyDisplay = new TextField(key);
                 keyDisplay.setEditable(false);
@@ -966,9 +976,9 @@ public class DashboardController {
                 menu.getItems().addAll(editItem, deleteItem);
 
                 row.contextMenuProperty().bind(
-                      javafx.beans.binding.Bindings.when(row.emptyProperty())
-                            .then((ContextMenu) null)
-                            .otherwise(menu));
+                        javafx.beans.binding.Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null)
+                                .otherwise(menu));
             }
 
             return row;
@@ -995,9 +1005,9 @@ public class DashboardController {
             menu.getItems().add(copyKeyItem);
 
             row.contextMenuProperty().bind(
-                  javafx.beans.binding.Bindings.when(row.emptyProperty())
-                        .then((ContextMenu) null)
-                        .otherwise(menu));
+                    javafx.beans.binding.Bindings.when(row.emptyProperty())
+                            .then((ContextMenu) null)
+                            .otherwise(menu));
 
             return row;
         });
@@ -1097,16 +1107,16 @@ public class DashboardController {
                 editItem.setOnAction(e -> handlePublisherDialog(row.getItem()));
                 deleteItem.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                          "Delete publisher '" + row.getItem().getName() + "'?", ButtonType.YES,
-                          ButtonType.CANCEL);
+                            "Delete publisher '" + row.getItem().getName() + "'?", ButtonType.YES,
+                            ButtonType.CANCEL);
                     if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.YES) {
                         viewModel.deleteSelectedPublisher(row.getItem());
                     }
                 });
                 menu.getItems().addAll(editItem, deleteItem);
                 row.contextMenuProperty()
-                      .bind(javafx.beans.binding.Bindings.when(row.emptyProperty())
-                            .then((ContextMenu) null).otherwise(menu));
+                        .bind(javafx.beans.binding.Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null).otherwise(menu));
             }
             return row;
         });
@@ -1122,16 +1132,16 @@ public class DashboardController {
                 editItem.setOnAction(e -> handleGenreDialog(row.getItem()));
                 deleteItem.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                          "Delete genre '" + row.getItem().getName() + "'?", ButtonType.YES,
-                          ButtonType.CANCEL);
+                            "Delete genre '" + row.getItem().getName() + "'?", ButtonType.YES,
+                            ButtonType.CANCEL);
                     if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.YES) {
                         viewModel.deleteSelectedGenre(row.getItem());
                     }
                 });
                 menu.getItems().addAll(editItem, deleteItem);
                 row.contextMenuProperty()
-                      .bind(javafx.beans.binding.Bindings.when(row.emptyProperty())
-                            .then((ContextMenu) null).otherwise(menu));
+                        .bind(javafx.beans.binding.Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null).otherwise(menu));
             }
             return row;
         });
@@ -1163,24 +1173,24 @@ public class DashboardController {
         TextField nameField = new TextField(publisher != null ? publisher.getName() : "");
         nameField.setPromptText("Company Name");
         TextField webField = new TextField(
-              publisher != null && publisher.getWebsite() != null ? publisher.getWebsite() : "");
+                publisher != null && publisher.getWebsite() != null ? publisher.getWebsite() : "");
         webField.setPromptText("Website URL");
         TextField emailField = new TextField(
-              publisher != null && publisher.getSupportEmail() != null ? publisher.getSupportEmail()
-                    : "");
+                publisher != null && publisher.getSupportEmail() != null ? publisher.getSupportEmail()
+                        : "");
         emailField.setPromptText("Support Email");
 
         VBox content = new VBox(10, new Label("Name:"), nameField, new Label("Website:"), webField,
-              new Label("Support Email:"), emailField);
+                new Label("Support Email:"), emailField);
         dialog.getDialogPane().setContent(content);
 
         dialog.setResultConverter(btn -> {
             if (btn == saveBtnType) {
                 return PublisherDTO.builder()
-                      .name(nameField.getText())
-                      .website(webField.getText())
-                      .supportEmail(emailField.getText())
-                      .build();
+                        .name(nameField.getText())
+                        .website(webField.getText())
+                        .supportEmail(emailField.getText())
+                        .build();
             }
             return null;
         });
@@ -1189,7 +1199,7 @@ public class DashboardController {
             if (dto.getName() != null && !dto.getName().trim().isEmpty()) {
                 if (publisher != null) {
                     viewModel.updatePublisher(publisher.getId(), dto.getName(), dto.getWebsite(),
-                          dto.getSupportEmail());
+                            dto.getSupportEmail());
                 } else {
                     viewModel.addPublisher(dto.getName(), dto.getWebsite(), dto.getSupportEmail());
                 }
@@ -1233,15 +1243,16 @@ public class DashboardController {
         FileChooser fc = new FileChooser();
         fc.setTitle("Store Official Receipt");
         fc.setInitialFileName(
-              "Receipt_" + order.getGameTitle().replaceAll("[^a-zA-Z0-9]", "_") + ".xlsx");
+                "Receipt_" + order.getGameTitle().replaceAll("[^a-zA-Z0-9]", "_") + ".xlsx");
         fc.getExtensionFilters()
-              .add(new FileChooser.ExtensionFilter("Excel Workspace (*.xlsx)", "*.xlsx"));
+                .add(new FileChooser.ExtensionFilter("Excel Workspace (*.xlsx)", "*.xlsx"));
 
         Stage current = (Stage) exportOrdersBtn.getScene().getWindow();
         File file = fc.showSaveDialog(current);
 
         if (file != null) {
-            // Decoupled operational execution utilizing concurrency model as defined by directives
+            // Decoupled operational execution utilizing concurrency model as defined by
+            // directives
             javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<>() {
                 @Override
                 protected Void call() throws Exception {
@@ -1251,13 +1262,13 @@ public class DashboardController {
             };
             task.setOnSucceeded(e -> {
                 Alert succ = new Alert(Alert.AlertType.INFORMATION,
-                      "Receipt serialization finalized successfully.", ButtonType.OK);
+                        "Receipt serialization finalized successfully.", ButtonType.OK);
                 succ.show();
             });
             task.setOnFailed(e -> {
                 Alert err = new Alert(Alert.AlertType.ERROR,
-                      "Critical Failure exporting document: " + task.getException().getMessage(),
-                      ButtonType.OK);
+                        "Critical Failure exporting document: " + task.getException().getMessage(),
+                        ButtonType.OK);
                 err.show();
             });
             new Thread(task).start();
@@ -1269,7 +1280,7 @@ public class DashboardController {
         fc.setTitle("Export Total Transaction Ledger");
         fc.setInitialFileName("GameStore_Operational_Ledger.xlsx");
         fc.getExtensionFilters()
-              .add(new FileChooser.ExtensionFilter("Excel Workspace (*.xlsx)", "*.xlsx"));
+                .add(new FileChooser.ExtensionFilter("Excel Workspace (*.xlsx)", "*.xlsx"));
 
         Stage current = (Stage) exportOrdersBtn.getScene().getWindow();
         File file = fc.showSaveDialog(current);
@@ -1284,13 +1295,13 @@ public class DashboardController {
             };
             task.setOnSucceeded(e -> {
                 Alert succ = new Alert(Alert.AlertType.INFORMATION,
-                      "Grid data aggregation and writing complete.", ButtonType.OK);
+                        "Grid data aggregation and writing complete.", ButtonType.OK);
                 succ.show();
             });
             task.setOnFailed(e -> {
                 Alert err = new Alert(Alert.AlertType.ERROR,
-                      "Aggregate write failure: " + task.getException().getMessage(),
-                      ButtonType.OK);
+                        "Aggregate write failure: " + task.getException().getMessage(),
+                        ButtonType.OK);
                 err.show();
             });
             new Thread(task).start();
