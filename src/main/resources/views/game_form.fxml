@@ -30,6 +30,16 @@
         </VBox>
         
         <VBox spacing="5">
+            <Label text="DESCRIPTION" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <TextArea fx:id="descriptionArea" promptText="Enter game description..." prefHeight="80.0" wrapText="true"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="IMAGE URL" styleClass="label-input" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="imageUrlField" promptText="https://example.com/cover.jpg"/>
+        </VBox>
+
+        <VBox spacing="5">
             <Label text="OFFICIAL PUBLISHER" styleClass="label-input" style="-fx-font-weight: bold;"/>
             <ComboBox fx:id="publisherCombo" promptText="Select registered publisher..." maxWidth="Infinity"/>
         </VBox>

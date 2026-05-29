@@ -25,5 +25,7 @@ public class GameDTO {
     private Set<UUID> genreIds;
     private Set<String> genreNames;
     private int availableKeysCount;
+    private String description;
+    private String imageUrl;
 
 }

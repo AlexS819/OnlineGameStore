@@ -12,8 +12,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -37,20 +42,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.geometry.Pos;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -201,10 +202,11 @@ public class DashboardController {
     @FXML
     public void initialize() {
         // 1. Initialize data presentation mapping
-        viewModel.getGameList().addListener((javafx.collections.ListChangeListener.Change<? extends GameDTO> c) -> {
-            updateGameGrid();
-            updateCarousel();
-        });
+        viewModel.getGameList()
+              .addListener((javafx.collections.ListChangeListener.Change<? extends GameDTO> c) -> {
+                  updateGameGrid();
+                  updateCarousel();
+              });
 
         // 2.5 Configure Key Inventory columns
         keyIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -473,14 +475,15 @@ public class DashboardController {
             }
 
             // 2. Generate unique order ID
-            String orderId = "TOPUP-" + UUID.randomUUID().toString().substring(0, 8) + "-" + System.currentTimeMillis();
+            String orderId = "TOPUP-" + UUID.randomUUID().toString().substring(0, 8) + "-"
+                  + System.currentTimeMillis();
 
             try {
                 // 3. Generate HTML content
                 String htmlContent = liqPayService.generateCheckoutHtml(
-                        orderId,
-                        amount,
-                        userSession.getCurrentUser().getEmail()
+                      orderId,
+                      amount,
+                      userSession.getCurrentUser().getEmail()
                 );
 
                 // 4. Write HTML to temporary file inside the workspace
@@ -494,23 +497,29 @@ public class DashboardController {
                 }
 
                 // 5. Open local HTML file in default system browser
-                if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop()
+                      .isSupported(java.awt.Desktop.Action.BROWSE)) {
                     java.awt.Desktop.getDesktop().browse(tempFile.toURI());
                 } else {
                     // Fallback
-                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + tempFile.getAbsolutePath());
+                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "
+                          + tempFile.getAbsolutePath());
                 }
 
                 // 6. Show "Awaiting Payment" verification dialog in JavaFX
                 Alert awaitingAlert = new Alert(Alert.AlertType.CONFIRMATION);
                 awaitingAlert.setTitle("LiqPay Checkout");
                 awaitingAlert.setHeaderText("Awaiting Sandbox Payment Completion");
-                awaitingAlert.setContentText("We have opened the LiqPay Sandbox page in your web browser.\n\n" +
-                        "1. Complete the test transaction in your browser (use any test card details).\n" +
-                        "2. Once done, return here and click 'Confirm Payment' to verify and credit your wallet.");
+                awaitingAlert.setContentText(
+                      "We have opened the LiqPay Sandbox page in your web browser.\n\n" +
+                            "1. Complete the test transaction in your browser (use any test card details).\n"
+                            +
+                            "2. Once done, return here and click 'Confirm Payment' to verify and credit your wallet.");
 
-                ButtonType confirmBtnType = new ButtonType("Confirm Payment", ButtonBar.ButtonData.OK_DONE);
-                ButtonType cancelBtnType = new ButtonType("Cancel Top Up", ButtonBar.ButtonData.CANCEL_CLOSE);
+                ButtonType confirmBtnType = new ButtonType("Confirm Payment",
+                      ButtonBar.ButtonData.OK_DONE);
+                ButtonType cancelBtnType = new ButtonType("Cancel Top Up",
+                      ButtonBar.ButtonData.CANCEL_CLOSE);
                 awaitingAlert.getButtonTypes().setAll(confirmBtnType, cancelBtnType);
 
                 java.util.Optional<ButtonType> alertResult = awaitingAlert.showAndWait();
@@ -521,19 +530,23 @@ public class DashboardController {
                         // Credit wallet balance
                         userService.topUpBalance(userSession.getCurrentUser().getId(), amount);
                         // Update local session
-                        userSession.getCurrentUser().setBalance(userSession.getCurrentUser().getBalance().add(amount));
+                        userSession.getCurrentUser()
+                              .setBalance(userSession.getCurrentUser().getBalance().add(amount));
                         // Refresh Profile view
                         showProfileView();
 
                         Alert success = new Alert(Alert.AlertType.INFORMATION);
                         success.setTitle("Top Up Successful!");
                         success.setHeaderText("Wallet Credited!");
-                        success.setContentText("Transaction verified successfully. $" + amount + " has been added to your balance.\n" +
-                                "A receipt has been dispatched to your email address!");
+                        success.setContentText("Transaction verified successfully. $" + amount
+                              + " has been added to your balance.\n" +
+                              "A receipt has been dispatched to your email address!");
                         success.showAndWait();
                     } else {
-                        showError("Verification Failed", "LiqPay reported that the transaction is not completed or has failed.\n\n" +
-                                "Please make sure you finished the payment in the browser before confirming.");
+                        showError("Verification Failed",
+                              "LiqPay reported that the transaction is not completed or has failed.\n\n"
+                                    +
+                                    "Please make sure you finished the payment in the browser before confirming.");
                     }
                 }
 
@@ -541,7 +554,8 @@ public class DashboardController {
                 tempFile.deleteOnExit();
 
             } catch (Exception ex) {
-                showError("Top Up Error", "Failed to initiate payment sequence: " + ex.getMessage());
+                showError("Top Up Error",
+                      "Failed to initiate payment sequence: " + ex.getMessage());
             }
         }
     }
@@ -607,7 +621,7 @@ public class DashboardController {
         dialog.setHeaderText(
               "Action requires identity verification.\nPlease supply current password to authenticate deletion.");
 
-        ButtonType executeBtn = new ButtonType("💣 Permanently Delete Account",
+        ButtonType executeBtn = new ButtonType("Permanently Delete Account",
               ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(executeBtn, ButtonType.CANCEL);
 
@@ -651,20 +665,66 @@ public class DashboardController {
         }
     }
 
+    private void handleShowGameDetails(GameDTO game) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/game_details.fxml"));
+            loader.setControllerFactory(springContext::getBean);
+            Parent root = loader.load();
+
+            GameDetailsController controller = loader.getController();
+            controller.setGame(game, () -> handleBuyGame(game));
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Game Details - " + game.getTitle());
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.initOwner(gamesFlowPane.getScene().getWindow());
+            dialogStage.setScene(new Scene(root));
+            dialogStage.setResizable(false);
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Node createGameCard(GameDTO game) {
-        VBox card = new VBox(10);
+        VBox card = new VBox(8);
         card.getStyleClass().add("game-card");
-        card.setPrefWidth(220);
-        card.setPrefHeight(150);
+        card.setPrefWidth(170);
+        card.setPrefHeight(260);
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setStyle("-fx-cursor: hand;");
+
+        ImageView coverView = new ImageView();
+        coverView.setFitWidth(150);
+        coverView.setFitHeight(170);
+        coverView.setPreserveRatio(false);
+        coverView.setStyle("-fx-background-radius: 6px;");
+
+        String imgUrl = game.getImageUrl();
+        if (imgUrl != null && !imgUrl.trim().isEmpty()) {
+            try {
+                coverView.setImage(new Image(imgUrl, true));
+            } catch (Exception ex) {
+                coverView.setImage(new Image(
+                      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80",
+                      true));
+            }
+        } else {
+            coverView.setImage(
+                  new Image("https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&q=80",
+                        true));
+        }
+
+        VBox textContainer = new VBox(4);
+        textContainer.setPadding(new Insets(2, 8, 8, 8));
+        textContainer.setAlignment(Pos.TOP_LEFT);
 
         Label title = new Label(game.getTitle());
         title.getStyleClass().add("game-card-title");
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
         Label price = new Label("$" + game.getPrice());
         price.getStyleClass().add("game-card-price");
-
-        Label genres = new Label(game.getGenreNames() != null && !game.getGenreNames().isEmpty() ? String.join(", ", game.getGenreNames()) : "No Genre");
-        genres.getStyleClass().add("game-card-genre");
 
         Label stock = new Label();
         stock.getStyleClass().add("game-card-stock");
@@ -676,25 +736,29 @@ public class DashboardController {
             stock.getStyleClass().add("game-card-stock-out");
         }
 
-        card.getChildren().addAll(title, price, genres, stock);
+        textContainer.getChildren().addAll(title, price, stock);
+        card.getChildren().addAll(coverView, textContainer);
 
-        // Double click to buy
+        // Single click to view details
         card.setOnMouseClicked(event -> {
-            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                handleBuyGame(game);
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                handleShowGameDetails(game);
             }
         });
 
         // Context Menu
         ContextMenu menu = new ContextMenu();
-        MenuItem buyItem = new MenuItem("🛒 Buy Game");
+        MenuItem detailsItem = new MenuItem("View Details");
+        detailsItem.setOnAction(e -> handleShowGameDetails(game));
+        MenuItem buyItem = new MenuItem("Buy Game");
         buyItem.setOnAction(e -> handleBuyGame(game));
-        menu.getItems().add(buyItem);
+        menu.getItems().addAll(detailsItem, buyItem);
 
         if (userSession.isAdmin()) {
             menu.getItems().add(new SeparatorMenuItem());
-            MenuItem editItem = new MenuItem("🖊 Edit Product Details");
-            MenuItem deleteItem = new MenuItem("🗑 Delete This Title");
+            MenuItem editItem = new MenuItem(
+                  "Edit Product Details");
+            MenuItem deleteItem = new MenuItem("Delete This Title");
             editItem.setOnAction(e -> handleOpenForm(game));
             deleteItem.setOnAction(e -> handleDeletion(game));
             menu.getItems().addAll(editItem, deleteItem);
@@ -740,40 +804,46 @@ public class DashboardController {
 
     private void showCarouselSlide(java.util.List<GameDTO> featuredGames) {
         carouselContainer.getChildren().clear();
-        if (featuredGames.isEmpty()) return;
+        if (featuredGames.isEmpty()) {
+            return;
+        }
 
         GameDTO game = featuredGames.get(currentCarouselIndex);
 
         BorderPane slide = new BorderPane();
         slide.getStyleClass().add("carousel-banner");
-        slide.setStyle("-fx-padding: 30; -fx-background-color: linear-gradient(to right, #1877F2, #00C6FF); -fx-background-radius: 12px;");
+        slide.setStyle(
+              "-fx-padding: 30; -fx-background-color: linear-gradient(to right, #1877F2, #00C6FF); -fx-background-radius: 12px;");
 
         VBox info = new VBox(15);
         info.setAlignment(Pos.CENTER_LEFT);
-        
+
         Label title = new Label(game.getTitle());
         title.getStyleClass().add("carousel-title");
-        
+
         Label publisher = new Label("By " + game.getPublisherName());
         publisher.setStyle("-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 16px;");
 
         Label price = new Label("$" + game.getPrice());
         price.getStyleClass().add("carousel-price");
 
-        Button buyBtn = new Button("Buy Now");
-        buyBtn.getStyleClass().add("carousel-btn");
-        buyBtn.setOnAction(e -> handleBuyGame(game));
+        Button detailsBtn = new Button("View Details");
+        detailsBtn.getStyleClass().add("carousel-btn");
+        detailsBtn.setOnAction(e -> handleShowGameDetails(game));
 
-        info.getChildren().addAll(title, publisher, price, buyBtn);
+        info.getChildren().addAll(title, publisher, price, detailsBtn);
 
         HBox controls = new HBox(10);
         controls.setAlignment(Pos.BOTTOM_RIGHT);
         Button prevBtn = new Button("<");
         prevBtn.getStyleClass().add("carousel-btn");
         prevBtn.setOnAction(e -> {
-            currentCarouselIndex = (currentCarouselIndex - 1 + featuredGames.size()) % featuredGames.size();
+            currentCarouselIndex =
+                  (currentCarouselIndex - 1 + featuredGames.size()) % featuredGames.size();
             showCarouselSlide(featuredGames);
-            if(carouselTimeline != null) carouselTimeline.playFromStart();
+            if (carouselTimeline != null) {
+                carouselTimeline.playFromStart();
+            }
         });
 
         Button nextBtn = new Button(">");
@@ -781,7 +851,9 @@ public class DashboardController {
         nextBtn.setOnAction(e -> {
             currentCarouselIndex = (currentCarouselIndex + 1) % featuredGames.size();
             showCarouselSlide(featuredGames);
-            if(carouselTimeline != null) carouselTimeline.playFromStart();
+            if (carouselTimeline != null) {
+                carouselTimeline.playFromStart();
+            }
         });
 
         controls.getChildren().addAll(prevBtn, nextBtn);
@@ -814,11 +886,11 @@ public class DashboardController {
             try {
                 OrderDTO purchaseOrder = viewModel.buyGame(userSession.getCurrentUser().getId(),
                       game.getId());
-                
+
                 // Update local session balance dynamically
                 if (!userSession.isAdmin() && userSession.getCurrentUser().getBalance() != null) {
                     userSession.getCurrentUser().setBalance(
-                        userSession.getCurrentUser().getBalance().subtract(game.getPrice())
+                          userSession.getCurrentUser().getBalance().subtract(game.getPrice())
                     );
                 }
 
@@ -841,8 +913,8 @@ public class DashboardController {
                 success.getDialogPane().setExpandableContent(keyDisplay);
                 success.getDialogPane().setExpanded(true);
 
-                ButtonType copyBtn = new ButtonType("📋 Copy Key");
-                ButtonType exportBtn = new ButtonType("📄 Export Receipt");
+                ButtonType copyBtn = new ButtonType("Copy Key");
+                ButtonType exportBtn = new ButtonType("Export Receipt");
                 success.getButtonTypes().setAll(copyBtn, exportBtn, ButtonType.OK);
 
                 java.util.Optional<ButtonType> result = success.showAndWait();
@@ -874,8 +946,8 @@ public class DashboardController {
             if (userSession.isAdmin()) {
                 ContextMenu menu = new ContextMenu();
 
-                MenuItem editItem = new MenuItem("🖊 Edit Key");
-                MenuItem deleteItem = new MenuItem("🗑 Delete This Key");
+                MenuItem editItem = new MenuItem("Edit Key");
+                MenuItem deleteItem = new MenuItem("Delete This Key");
 
                 editItem.setOnAction(e -> {
                     ActivationKeyDTO selectedItem = row.getItem();
@@ -908,7 +980,7 @@ public class DashboardController {
             TableRow<OrderDTO> row = new TableRow<>();
 
             ContextMenu menu = new ContextMenu();
-            MenuItem copyKeyItem = new MenuItem("📋 Copy Activation Key");
+            MenuItem copyKeyItem = new MenuItem("Copy Activation Key");
 
             copyKeyItem.setOnAction(e -> {
                 OrderDTO selectedItem = row.getItem();
@@ -1020,8 +1092,8 @@ public class DashboardController {
             TableRow<PublisherDTO> row = new TableRow<>();
             if (userSession.isAdmin()) {
                 ContextMenu menu = new ContextMenu();
-                MenuItem editItem = new MenuItem("🖊 Edit Publisher");
-                MenuItem deleteItem = new MenuItem("🗑 Delete Publisher");
+                MenuItem editItem = new MenuItem("Edit Publisher");
+                MenuItem deleteItem = new MenuItem("Delete Publisher");
                 editItem.setOnAction(e -> handlePublisherDialog(row.getItem()));
                 deleteItem.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
@@ -1045,8 +1117,8 @@ public class DashboardController {
             TableRow<GenreDTO> row = new TableRow<>();
             if (userSession.isAdmin()) {
                 ContextMenu menu = new ContextMenu();
-                MenuItem editItem = new MenuItem("🖊 Edit Genre");
-                MenuItem deleteItem = new MenuItem("🗑 Delete Genre");
+                MenuItem editItem = new MenuItem("Edit Genre");
+                MenuItem deleteItem = new MenuItem("Delete Genre");
                 editItem.setOnAction(e -> handleGenreDialog(row.getItem()));
                 deleteItem.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,

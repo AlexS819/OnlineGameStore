@@ -75,7 +75,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    public GameDTO createGame(String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds) {
+    public GameDTO createGame(String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds, String description, String imageUrl) {
         Publisher pub = publisherRepository.findById(publisherId)
                 .orElseThrow(() -> new EntityNotFoundException("Referenced publisher missing from archives."));
 
@@ -89,6 +89,8 @@ public class GameServiceImpl implements GameService {
                 .price(price)
                 .publisher(pub)
                 .genres(mappedGenres)
+                .description(description)
+                .imageUrl(imageUrl)
                 .build();
 
         Game saved = gameRepository.save(newGame);
@@ -97,7 +99,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    public GameDTO updateGame(UUID id, String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds) {
+    public GameDTO updateGame(UUID id, String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds, String description, String imageUrl) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Update failed: Target record missing."));
         
@@ -107,6 +109,8 @@ public class GameServiceImpl implements GameService {
         game.setTitle(title);
         game.setPrice(price);
         game.setPublisher(pub);
+        game.setDescription(description);
+        game.setImageUrl(imageUrl);
         
         java.util.Set<com.sochka.onlinegamestore.domain.Genre> mappedGenres = new HashSet<>();
         if (genreIds != null && !genreIds.isEmpty()) {

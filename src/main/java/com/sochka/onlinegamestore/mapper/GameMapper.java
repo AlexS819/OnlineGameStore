@@ -24,6 +24,8 @@ public class GameMapper {
                 .publisherId(entity.getPublisher() != null ? entity.getPublisher().getId() : null)
                 .genreIds(entity.getGenres().stream().map(Genre::getId).collect(Collectors.toSet()))
                 .genreNames(entity.getGenres().stream().map(Genre::getName).collect(Collectors.toSet()))
+                .description(entity.getDescription())
+                .imageUrl(entity.getImageUrl())
                 .build();
     }
 }

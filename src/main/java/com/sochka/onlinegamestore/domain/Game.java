@@ -32,6 +32,12 @@ public class Game extends BaseEntity {
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
+    @Column(name = "description", length = 2000)
+    private String description;
+
+    @Column(name = "image_url", length = 1000)
+    private String imageUrl;
+
     @NotNull(message = "Publisher linkage needed")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher_id", nullable = false)

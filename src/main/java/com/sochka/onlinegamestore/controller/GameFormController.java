@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class GameFormController {
 
     @FXML private TextField titleField;
     @FXML private TextField priceField;
+    @FXML private TextArea descriptionArea;
+    @FXML private TextField imageUrlField;
     @FXML private ComboBox<PublisherDTO> publisherCombo;
     @FXML private ListView<com.sochka.onlinegamestore.dto.GenreDTO> genreListView;
     @FXML private Label errorLabel;
@@ -43,6 +46,8 @@ public class GameFormController {
         // Establish hard bindings between native controls and state
         titleField.textProperty().bindBidirectional(viewModel.titleProperty());
         priceField.textProperty().bindBidirectional(viewModel.priceProperty());
+        descriptionArea.textProperty().bindBidirectional(viewModel.descriptionProperty());
+        imageUrlField.textProperty().bindBidirectional(viewModel.imageUrlProperty());
         publisherCombo.setItems(viewModel.getPublishers());
         publisherCombo.setConverter(new javafx.util.StringConverter<PublisherDTO>() {
             @Override

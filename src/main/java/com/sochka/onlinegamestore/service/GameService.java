@@ -34,12 +34,12 @@ public interface GameService {
     /**
      * Synthesizes and persists new digital product with multi-dimensional relation linking.
      */
-    GameDTO createGame(String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds);
+    GameDTO createGame(String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds, String description, String imageUrl);
 
     /**
      * Edits attributes and re-associates existing product to updated domain subsets.
      */
-    GameDTO updateGame(UUID id, String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds);
+    GameDTO updateGame(UUID id, String title, BigDecimal price, UUID publisherId, java.util.Set<UUID> genreIds, String description, String imageUrl);
 
     /**
      * Safely detaches and removes title node provided constraints permit destruction.

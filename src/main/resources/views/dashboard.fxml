@@ -16,18 +16,18 @@
             <Label text="GS Manager" styleClass="sidebar-logo"/>
             <Separator opacity="0.1" />
             
-            <Button fx:id="gameCatalogBtn" text="📁 Game Catalog" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button fx:id="keyInventoryBtn" text="🛒 Key Inventory" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button fx:id="publishersBtn" text="🏢 Publishers" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button fx:id="genresBtn" text="🏷️ Genres" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button fx:id="customersBtn" text="📦 Orders &amp; Library" styleClass="sidebar-btn" maxWidth="Infinity"/>
-            <Button fx:id="profileBtn" text="👤 Profile &amp; Settings" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button fx:id="gameCatalogBtn" text="Game Catalog" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button fx:id="keyInventoryBtn" text="Key Inventory" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button fx:id="publishersBtn" text="Publishers" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button fx:id="genresBtn" text="Genres" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button fx:id="customersBtn" text="Orders &amp; Library" styleClass="sidebar-btn" maxWidth="Infinity"/>
+            <Button fx:id="profileBtn" text="Profile &amp; Settings" styleClass="sidebar-btn" maxWidth="Infinity"/>
             
             <Region VBox.vgrow="ALWAYS" />
             
             <Separator opacity="0.1" />
-            <Button fx:id="deleteProfileBtn" text="🗑 Delete Account" styleClass="sidebar-btn" maxWidth="Infinity" style="-fx-text-fill: #FFAAAA;"/>
-            <Button fx:id="signOutBtn" text="🚪 Sign Out" styleClass="sidebar-btn" maxWidth="Infinity" style="-fx-text-fill: #F35353;"/>
+            <Button fx:id="deleteProfileBtn" text="Delete Account" styleClass="sidebar-btn" maxWidth="Infinity" style="-fx-text-fill: #FFAAAA;"/>
+            <Button fx:id="signOutBtn" text="Sign Out" styleClass="sidebar-btn" maxWidth="Infinity" style="-fx-text-fill: #F35353;"/>
         </VBox>
     </left>
 
@@ -61,7 +61,7 @@
                 <!-- Games Grid Visualization -->
                 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 0; -fx-border-color: transparent; -fx-background-insets: 0;">
                     <content>
-                        <FlowPane fx:id="gamesFlowPane" hgap="20.0" vgap="20.0" style="-fx-padding: 10;" alignment="TOP_LEFT"/>
+                        <FlowPane fx:id="gamesFlowPane" hgap="20.0" vgap="20.0" style="-fx-padding: 10;" alignment="TOP_CENTER"/>
                     </content>
                 </ScrollPane>
             </VBox>
@@ -130,7 +130,7 @@
                         <Label text="Publishers Management" styleClass="page-title"/>
                         <Label text="Manage distribution partners and companies." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
-                    <Button fx:id="addPublisherBtn" text="➕ New Publisher" styleClass="action-btn" />
+                    <Button fx:id="addPublisherBtn" text="New Publisher" styleClass="action-btn" />
                 </HBox>
                 <TableView fx:id="publishersTable" VBox.vgrow="ALWAYS">
                     <placeholder><Label text="No publishers registered." styleClass="sub-header-text"/></placeholder>
@@ -150,7 +150,7 @@
                         <Label text="Genres Management" styleClass="page-title"/>
                         <Label text="Manage catalog categorizations." styleClass="sub-header-text" wrapText="true"/>
                     </VBox>
-                    <Button fx:id="addGenreBtn" text="➕ New Genre" styleClass="action-btn" />
+                    <Button fx:id="addGenreBtn" text="New Genre" styleClass="action-btn" />
                 </HBox>
                 <TableView fx:id="genresTable" VBox.vgrow="ALWAYS">
                     <placeholder><Label text="No genres registered." styleClass="sub-header-text"/></placeholder>
@@ -195,7 +195,7 @@
                     
                     <Separator opacity="0.2" fx:id="profileBalanceSeparator"/>
                     <Label fx:id="profileBalanceHeader" text="Wallet Balance" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-                    <Button fx:id="topUpBalanceBtn" text="💸 Top Up Balance" styleClass="primary-button" maxWidth="200.0"/>
+                    <Button fx:id="topUpBalanceBtn" text="Top Up Balance" styleClass="primary-button" maxWidth="200.0"/>
                 </VBox>
             </VBox>
             

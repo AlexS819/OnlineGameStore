@@ -32,6 +32,8 @@ public class GameFormViewModel {
     // Form inputs
     private final StringProperty title = new SimpleStringProperty("");
     private final StringProperty price = new SimpleStringProperty("");
+    private final StringProperty description = new SimpleStringProperty("");
+    private final StringProperty imageUrl = new SimpleStringProperty("");
     private final ObjectProperty<PublisherDTO> selectedPublisher = new SimpleObjectProperty<>();
     private final java.util.Set<java.util.UUID> selectedGenreIds = new java.util.HashSet<>();
     
@@ -45,6 +47,8 @@ public class GameFormViewModel {
 
     public StringProperty titleProperty() { return title; }
     public StringProperty priceProperty() { return price; }
+    public StringProperty descriptionProperty() { return description; }
+    public StringProperty imageUrlProperty() { return imageUrl; }
     public ObjectProperty<PublisherDTO> selectedPublisherProperty() { return selectedPublisher; }
     public ObservableList<PublisherDTO> getPublishers() { return publishers; }
     public ObservableList<GenreDTO> getGenres() { return genres; }
@@ -60,6 +64,8 @@ public class GameFormViewModel {
         // Clear form state for reuse
         title.set("");
         price.set("");
+        description.set("");
+        imageUrl.set("");
         selectedPublisher.set(null);
         selectedGenreIds.clear();
 
@@ -71,6 +77,8 @@ public class GameFormViewModel {
         loadDependencies(); // ensure publishers loaded
         title.set(game.getTitle());
         price.set(game.getPrice().toString());
+        description.set(game.getDescription() != null ? game.getDescription() : "");
+        imageUrl.set(game.getImageUrl() != null ? game.getImageUrl() : "");
         editingGameId = game.getId();
         
         // Find the matching publisher in the observable list to pre-select it
@@ -111,9 +119,9 @@ public class GameFormViewModel {
 
             // Commit dynamic transaction based on operational state
             if (editingGameId != null) {
-                gameService.updateGame(editingGameId, title.get(), finalPrice, selectedPublisher.get().getId(), selectedGenreIds);
+                gameService.updateGame(editingGameId, title.get(), finalPrice, selectedPublisher.get().getId(), selectedGenreIds, description.get(), imageUrl.get());
             } else {
-                gameService.createGame(title.get(), finalPrice, selectedPublisher.get().getId(), selectedGenreIds);
+                gameService.createGame(title.get(), finalPrice, selectedPublisher.get().getId(), selectedGenreIds, description.get(), imageUrl.get());
             }
             return true;
 
