@@ -55,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = Order.builder()
                 .user(user)
                 .totalPrice(game.getPrice())
+                .createdAt(java.time.LocalDateTime.now())
                 .build();
         
         Order savedOrder = orderRepository.save(order);

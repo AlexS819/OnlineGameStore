@@ -55,6 +55,7 @@ installers/
 Звіт/
 ПР2/
 Курсова проєкт/
+*.lnk
 
 # Old project
 old_project_src_reference/
